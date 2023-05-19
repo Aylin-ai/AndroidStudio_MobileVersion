@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "503166413720",
+    "project_id": "antrap-firebase",
+    "storage_bucket": "antrap-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:503166413720:android:7d72fd09e9e674893219ed",
+        "android_client_info": {
+          "package_name": "com.example.mobileversion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "503166413720-6f18m8fglbd8oc4i5v088uq9s4oru32c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQhaTybKrnd-Q0Wn4mPt80xM3K8JfqOpM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "503166413720-6f18m8fglbd8oc4i5v088uq9s4oru32c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
