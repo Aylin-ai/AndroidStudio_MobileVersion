@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,10 +40,22 @@ public class AnimeFragment extends Fragment {
         animeList.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
-        animeViewModel.animeList = new ArrayList<>();
         animeViewModel.getAnimes(1, "ranked", "", "", 0);
-        adapter = new AnimeAdapter(animeViewModel.animeList);
-        animeList.setAdapter(adapter);
+        animeViewModel.getAnimeListLiveData().observe(getViewLifecycleOwner(), new Observer<List<Anime>>() {
+            @Override
+            public void onChanged(List<Anime> animeListData) {
+                // Обновляем адаптер с новыми данными
+                adapter = new AnimeAdapter(animeListData);
+                animeList.setAdapter(adapter);
+            }
+        });
+
+        animeViewModel.getMessageLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String message) {
+                // Обрабатываем сообщение
+            }
+        });
 
         return root;
     }

@@ -3,6 +3,8 @@ package com.example.mobileversion.ui.piece.anime;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.common.reflect.TypeToken;
@@ -28,6 +30,24 @@ import okhttp3.Response;
 
 public class AnimeViewModel extends ViewModel {
 
+    private MutableLiveData<List<Anime>> animeListLiveData = new MutableLiveData<>();
+    private MutableLiveData<Genre[]> genreLiveData = new MutableLiveData<>();
+    private MutableLiveData<String> messageLiveData = new MutableLiveData<>();
+
+    // Другие методы и поля вашего AnimeViewModel...
+
+    public LiveData<List<Anime>> getAnimeListLiveData() {
+        return animeListLiveData;
+    }
+
+    public LiveData<Genre[]> getGenreLiveData() {
+        return genreLiveData;
+    }
+
+    public LiveData<String> getMessageLiveData() {
+        return messageLiveData;
+    }
+
     private OkHttpClient httpClient;
     public List<Anime> animeList;
     public Genre[] animeGenres;
@@ -44,6 +64,7 @@ public class AnimeViewModel extends ViewModel {
                 .header("Authorization", "User-Agent ShikiOAuthTest");
         Request request = requestBuilder.build();
 
+        // Выполняем запрос на получение жанров
         httpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -52,17 +73,20 @@ public class AnimeViewModel extends ViewModel {
                     Type genreArrayType = new TypeToken<Genre[]>() {}.getType();
                     animeGenres = gson.fromJson(response.body().string(), genreArrayType);
 
-                    message = "Успех";
+                    // Обновляем значение LiveData с жанрами
+                    genreLiveData.postValue(animeGenres);
                 } else {
-                    message = "Провал";
+                    // Обновляем сообщение об ошибке
+                    messageLiveData.postValue("Failure");
                 }
             }
+
             @Override
             public void onFailure(Call call, IOException e) {
-                message = "Error";
+                // Обновляем сообщение об ошибке
+                messageLiveData.postValue("Error");
             }
         });
-
 
         String apiUrl;
         if (genre == 0) {
@@ -75,6 +99,7 @@ public class AnimeViewModel extends ViewModel {
                 .header("Authorization", "User-Agent ShikiOAuthTest")
                 .build();
 
+        // Выполняем запрос на получение списка аниме
         httpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -91,19 +116,24 @@ public class AnimeViewModel extends ViewModel {
                     for (Anime anime : animeList) {
                         anime.getImage().setOriginal("https://shikimori.me" + anime.getImage().getOriginal());
                     }
-                    message = "Success";
+                    // Обновляем значение LiveData с списком аниме
+                    animeListLiveData.postValue(animeList);
+                    // Обновляем сообщение об успешном выполнении
+                    messageLiveData.postValue("Success");
                 } else {
-                    message = "Failure";
+                    // Обновляем сообщение об ошибке
+                    messageLiveData.postValue("Failure");
                 }
             }
 
             @Override
             public void onFailure(Call call, IOException e) {
-                message = "Error";
+                // Обновляем сообщение об ошибке
+                messageLiveData.postValue("Error");
             }
         });
-
     }
+
 
     public void getAnimes(String searchAnime) {
         try {
