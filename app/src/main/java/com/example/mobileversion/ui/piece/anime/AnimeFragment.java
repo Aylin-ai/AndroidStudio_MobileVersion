@@ -24,7 +24,6 @@ import models.AnimeAdapter;
 
 public class AnimeFragment extends Fragment {
     private RecyclerView animeList;
-    private List<Anime> animeListData;
     private AnimeAdapter adapter;
     private FragmentAnimeBinding binding;
 
