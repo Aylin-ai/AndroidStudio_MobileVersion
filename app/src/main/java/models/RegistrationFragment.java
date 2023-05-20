@@ -2,6 +2,7 @@ package models;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +12,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.mobileversion.AppShellActivity;
 import com.example.mobileversion.MainActivity;
 import com.example.mobileversion.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,16 +35,8 @@ public class RegistrationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_registration, container, false);
-        // Дополнительная логика для фрагмента регистрации
 
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        String url = "jdbc:mysql://127.0.0.1:3306/antrap";
-        String username = "root";
-        String password = "";
+        // Дополнительная логика для фрагмента регистрации
 
         EditText userPassword1 = view.findViewById(R.id.userPassword1);
         EditText userPassword2 = view.findViewById(R.id.userPassword2);
@@ -78,6 +73,8 @@ public class RegistrationFragment extends Fragment {
                 mAuth.createUserWithEmailAndPassword(Email, Password1)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
+                                Intent intent = new Intent(getContext(), AppShellActivity.class);
+                                startActivity(intent);
                                 Toast.makeText(getContext(), "Authentication successful.",
                                         Toast.LENGTH_SHORT).show();
                             } else {
