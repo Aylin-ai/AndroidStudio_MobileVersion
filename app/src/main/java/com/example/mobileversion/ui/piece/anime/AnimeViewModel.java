@@ -169,21 +169,32 @@ public class AnimeViewModel extends ViewModel {
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         if (response.isSuccessful()) {
+                            JSONArray animeJsonArray = null;
+                            try {
+                                animeJsonArray = new JSONArray(response.body().string());
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
                             Type listType = new TypeToken<List<Anime>>() {}.getType();
                             Gson gson = new Gson();
-                            animeList = gson.fromJson(response.body().string(), listType);
+                            animeList = gson.fromJson(animeJsonArray.toString(), listType);
                             for (Anime anime : animeList) {
                                 anime.getImage().setOriginal("https://shikimori.me" + anime.getImage().getOriginal());
                             }
+                            // Обновляем значение LiveData с списком аниме
+                            animeListLiveData.postValue(animeList);
+                            // Обновляем сообщение об успешном выполнении
+                            messageLiveData.postValue("Success");
                         } else {
-                            // Обработка неуспешного ответа
+                            // Обновляем сообщение об ошибке
+                            messageLiveData.postValue("Failure");
                         }
                     }
 
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        // Обработка ошибки
-                        Log.e("AnimeManager", e.getMessage());
+                        // Обновляем сообщение об ошибке
+                        messageLiveData.postValue("Error");
                     }
                 });
             }

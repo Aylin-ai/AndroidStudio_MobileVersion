@@ -3,23 +3,15 @@ package com.example.mobileversion.ui.piece.anime;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListPopupWindow;
 import android.widget.PopupMenu;
-import android.widget.PopupWindow;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -36,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 import models.Anime;
 import models.AnimeAdapter;
@@ -130,10 +123,10 @@ public class AnimeFragment extends Fragment {
                         showDropdownList(adapter, getResources().getStringArray(R.array.spinner_piece_order));
                         return true;
                     case R.id.menu_pages:
-                        showDropdownList(adapter, new String[] {});
+                        showDropdownList(adapter, IntStream.rangeClosed(1, 400).toArray());
                         return true;
                     case R.id.menu_search:
-                        // Действия для кастомного пункта меню
+                        showDropdownList(adapter);
                         return true;
                     default:
                         return false;
@@ -385,6 +378,108 @@ public class AnimeFragment extends Fragment {
                         animeViewModel.getSelectedKind(),
                         animeViewModel.getSelectedStatus(),
                         animeViewModel.getSelectedGenre());
+                animeViewModel.getAnimeListLiveData().observe(getViewLifecycleOwner(), new Observer<List<Anime>>() {
+                    @Override
+                    public void onChanged(List<Anime> animeListData) {
+                        // Обновляем адаптер с новыми данными
+                        animeAdapter.setAnimeList(animeListData);
+                        animeAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        });
+        builder.setNegativeButton("Отмена", null);
+
+        // Отображение диалогового окна
+        builder.show();
+    }
+
+    private void showDropdownList(AnimeAdapter animeAdapter, int[] options) {
+        AnimeViewModel animeViewModel =
+                new ViewModelProvider(this).get(AnimeViewModel.class);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Выберите опцию");
+
+        String[] stringOptions = new String[options.length];
+        for (int i = 0; i < options.length; i++) {
+            stringOptions[i] = String.valueOf(options[i]);
+        }
+
+        // Создание и настройка адаптера для списка
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, stringOptions);
+
+        // Создание Spinner и установка адаптера
+        final Spinner spinner = new Spinner(getActivity());
+        spinner.setAdapter(adapter);
+
+        int selectedPosition = animeViewModel.getSelectedPage() - 1;
+        spinner.setSelection(selectedPosition);
+
+        // Установка Spinner в диалоговое окно
+        builder.setView(spinner);
+
+        // Установка кнопок "OK" и "Отмена"
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // Получение выбранного значения из Spinner
+                String selectedOption = (String) spinner.getSelectedItem();
+
+                for (int i = 0; i < options.length; i++){
+                    if (Objects.equals(selectedOption, stringOptions[i])){
+                        animeViewModel.setSelectedPage(options[i]);
+                    }
+                }
+
+                animeViewModel.getAnimes(animeViewModel.getSelectedPage(),
+                        animeViewModel.getSelectedOrder(),
+                        animeViewModel.getSelectedKind(),
+                        animeViewModel.getSelectedStatus(),
+                        animeViewModel.getSelectedGenre());
+                animeViewModel.getAnimeListLiveData().observe(getViewLifecycleOwner(), new Observer<List<Anime>>() {
+                    @Override
+                    public void onChanged(List<Anime> animeListData) {
+                        // Обновляем адаптер с новыми данными
+                        animeAdapter.setAnimeList(animeListData);
+                        animeAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        });
+        builder.setNegativeButton("Отмена", null);
+
+        // Отображение диалогового окна
+        builder.show();
+    }
+
+    private void showDropdownList(AnimeAdapter animeAdapter) {
+        AnimeViewModel animeViewModel =
+                new ViewModelProvider(this).get(AnimeViewModel.class);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Введите название");
+
+        // Создание TextView
+        final EditText editText = new EditText(getActivity());
+        // Настройка параметров TextView
+        editText.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT));
+        editText.setPadding(16, 16, 16, 16);
+        editText.setTextSize(20);
+
+        // Установка TextView в диалоговое окно
+        builder.setView(editText);
+
+        // Установка кнопок "OK" и "Отмена"
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // Получение выбранного значения из TextView
+                String enteredText = editText.getText().toString();
+
+                animeViewModel.getAnimes(enteredText);
                 animeViewModel.getAnimeListLiveData().observe(getViewLifecycleOwner(), new Observer<List<Anime>>() {
                     @Override
                     public void onChanged(List<Anime> animeListData) {
