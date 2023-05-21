@@ -35,9 +35,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import models.Anime;
 import models.AnimeAdapter;
+import models.Genre;
 
 public class AnimeFragment extends Fragment {
     private RecyclerView animeList;
@@ -116,7 +118,7 @@ public class AnimeFragment extends Fragment {
                 // Обработка выбора пунктов меню
                 switch (item.getItemId()) {
                     case R.id.menu_genres:
-
+                        showDropdownList(adapter, animeViewModel.animeGenres);
                         return true;
                     case R.id.menu_status:
                         showDropdownList(adapter, getResources().getStringArray(R.array.spinner_anime_status));
@@ -154,6 +156,87 @@ public class AnimeFragment extends Fragment {
         // Создание Spinner и установка адаптера
         final Spinner spinner = new Spinner(getActivity());
         spinner.setAdapter(adapter);
+
+        int selectedPosition = 0;
+        String selectedItem = "";
+        if (Arrays.equals(options, getResources().getStringArray(R.array.spinner_piece_order))){
+            switch (animeViewModel.getSelectedOrder()){
+                case "ranked":
+                    selectedItem = "По рейтингу";
+                    break;
+                case "kind":
+                    selectedItem = "По типу";
+                    break;
+                case "popularity":
+                    selectedItem = "По популярности";
+                    break;
+                case "name":
+                    selectedItem = "По имени";
+                    break;
+                case "aired_on":
+                    selectedItem = "По дате релиза";
+                    break;
+                case "status":
+                    selectedItem = "По статусу";
+                    break;
+                case "random":
+                    selectedItem = "Случайно";
+                    break;
+            }
+            selectedPosition = Arrays.asList(options).indexOf(selectedItem);
+        } else if (Arrays.equals(options, getResources().getStringArray(R.array.spinner_anime_status))) {
+            switch (animeViewModel.getSelectedStatus()){
+                case "":
+                    selectedItem = "Всё";
+                    break;
+                case "anons":
+                    selectedItem = "Анонс";
+                    break;
+                case "ongoing":
+                    selectedItem = "Онгоинг";
+                    break;
+                case "released":
+                    selectedItem = "Вышел";
+                    break;
+            }
+            selectedPosition = Arrays.asList(options).indexOf(selectedItem);
+        } else if (Arrays.equals(options, getResources().getStringArray(R.array.spinner_anime_kind))) {
+            switch (animeViewModel.getSelectedKind()){
+                case "":
+                    selectedItem = "Всё";
+                    break;
+                case "tv":
+                    selectedItem = "ТВ";
+                    animeViewModel.setSelectedKind("tv");
+                    break;
+                case "movie":
+                    selectedItem = "Фильм";
+                    animeViewModel.setSelectedKind("movie");
+                    break;
+                case "ova":
+                    selectedItem = "OVA";
+                    animeViewModel.setSelectedKind("ova");
+                    break;
+                case "ona":
+                    selectedItem = "ONA";
+                    animeViewModel.setSelectedKind("ona");
+                    break;
+                case "tv_13":
+                    selectedItem = "TV 13 серий";
+                    animeViewModel.setSelectedKind("tv_13");
+                    break;
+                case "tv_24":
+                    selectedItem = "TV 24 серии";
+                    animeViewModel.setSelectedKind("tv_24");
+                    break;
+                case "tv_48":
+                    selectedItem = "TV 48 серий";
+                    animeViewModel.setSelectedKind("tv_48");
+                    break;
+            }
+            selectedPosition = Arrays.asList(options).indexOf(selectedItem);
+        }
+        spinner.setSelection(selectedPosition);
 
         // Установка Spinner в диалоговое окно
         builder.setView(spinner);
@@ -233,6 +316,70 @@ public class AnimeFragment extends Fragment {
                             break;
                     }
                 }
+                animeViewModel.getAnimes(animeViewModel.getSelectedPage(),
+                        animeViewModel.getSelectedOrder(),
+                        animeViewModel.getSelectedKind(),
+                        animeViewModel.getSelectedStatus(),
+                        animeViewModel.getSelectedGenre());
+                animeViewModel.getAnimeListLiveData().observe(getViewLifecycleOwner(), new Observer<List<Anime>>() {
+                    @Override
+                    public void onChanged(List<Anime> animeListData) {
+                        // Обновляем адаптер с новыми данными
+                        animeAdapter.setAnimeList(animeListData);
+                        animeAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        });
+        builder.setNegativeButton("Отмена", null);
+
+        // Отображение диалогового окна
+        builder.show();
+    }
+
+    private void showDropdownList(AnimeAdapter animeAdapter, Genre[] options) {
+        AnimeViewModel animeViewModel =
+                new ViewModelProvider(this).get(AnimeViewModel.class);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Выберите опцию");
+
+        ArrayList<Long> listId = new ArrayList<>();
+        ArrayList<String> list = new ArrayList<>();
+
+        listId.add(0L);
+        list.add("Всё");
+        for (Genre option : options) {
+            listId.add(option.getId());
+            list.add(option.getRussian());
+        }
+
+        // Создание и настройка адаптера для списка
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, list);
+
+        // Создание Spinner и установка адаптера
+        final Spinner spinner = new Spinner(getActivity());
+        spinner.setAdapter(adapter);
+
+        int selectedPosition = listId.indexOf(animeViewModel.getSelectedGenre());
+        spinner.setSelection(selectedPosition);
+
+        // Установка Spinner в диалоговое окно
+        builder.setView(spinner);
+
+        // Установка кнопок "OK" и "Отмена"
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // Получение выбранного значения из Spinner
+                String selectedOption = (String) spinner.getSelectedItem();
+
+                for (int i = 0; i < list.size(); i++){
+                    if (Objects.equals(selectedOption, list.get(i))){
+                        animeViewModel.setSelectedGenre(listId.get(i));
+                    }
+                }
+
                 animeViewModel.getAnimes(animeViewModel.getSelectedPage(),
                         animeViewModel.getSelectedOrder(),
                         animeViewModel.getSelectedKind(),

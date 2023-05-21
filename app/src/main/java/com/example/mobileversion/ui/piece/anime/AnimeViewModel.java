@@ -65,9 +65,9 @@ public class AnimeViewModel extends ViewModel {
     public String getSelectedStatus() { return selectedStatus; }
     public void setSelectedStatus(String selectedStatus) { this.selectedStatus = selectedStatus; }
 
-    private int selectedGenre;
-    public int getSelectedGenre() { return selectedGenre; }
-    public void setSelectedGenre(int selectedGenre) { this.selectedGenre = selectedGenre; }
+    private long selectedGenre;
+    public long getSelectedGenre() { return selectedGenre; }
+    public void setSelectedGenre(long selectedGenre) { this.selectedGenre = selectedGenre; }
 
     private int selectedPage;
     public int getSelectedPage() { return selectedPage; }
@@ -78,7 +78,7 @@ public class AnimeViewModel extends ViewModel {
         animeList = new ArrayList<>();
     }
 
-    public void getAnimes(int page, String order, String type, String status, int genre) {
+    public void getAnimes(int page, String order, String type, String status, long genre) {
         Request.Builder requestBuilder = new Request.Builder()
                 .url("https://shikimori.me/api/genres")
                 .header("Authorization", "User-Agent ShikiOAuthTest");
