@@ -17,10 +17,10 @@ import com.example.mobileversion.R;
 import java.util.List;
 
 public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> {
-    private List<Manga> animeList;
+    private List<Manga> mangaList;
 
     public MangaAdapter(List<Manga> animeList) {
-        this.animeList = animeList;
+        this.mangaList = animeList;
     }
 
     @NonNull
@@ -30,9 +30,13 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> 
         return new ViewHolder(view);
     }
 
+    public void setMangaList(List<Manga> mangaList){
+        this.mangaList = mangaList;
+    }
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Manga manga = animeList.get(position);
+        Manga manga = mangaList.get(position);
 
         // Bind data to the views in the item layout
         Glide.with(holder.itemView)
@@ -55,7 +59,7 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return animeList.size();
+        return mangaList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

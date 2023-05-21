@@ -28,14 +28,14 @@ import okhttp3.Response;
 
 public class MangaViewModel extends ViewModel {
 
-    private MutableLiveData<List<Manga>> pieceListLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<Manga>> listLiveData = new MutableLiveData<>();
     private MutableLiveData<Genre[]> genreLiveData = new MutableLiveData<>();
     private MutableLiveData<String> messageLiveData = new MutableLiveData<>();
 
     // Другие методы и поля вашего AnimeViewModel...
 
-    public LiveData<List<Manga>> getMangaListLiveData() {
-        return pieceListLiveData;
+    public LiveData<List<Manga>> getListLiveData() {
+        return listLiveData;
     }
 
     public LiveData<Genre[]> getGenreLiveData() {
@@ -47,16 +47,36 @@ public class MangaViewModel extends ViewModel {
     }
 
     private OkHttpClient httpClient;
-    public List<Manga> pieceList;
+    public List<Manga> list;
     public Genre[] genres;
     private String message;
 
+    private String selectedOrder;
+    public String getSelectedOrder() { return selectedOrder; }
+    public void setSelectedOrder(String selectedOrder) { this.selectedOrder = selectedOrder; }
+
+    private String selectedKind;
+    public String getSelectedKind() { return selectedKind; }
+    public void setSelectedKind(String selectedKind) { this.selectedKind = selectedKind; }
+
+    private String selectedStatus;
+    public String getSelectedStatus() { return selectedStatus; }
+    public void setSelectedStatus(String selectedStatus) { this.selectedStatus = selectedStatus; }
+
+    private long selectedGenre;
+    public long getSelectedGenre() { return selectedGenre; }
+    public void setSelectedGenre(long selectedGenre) { this.selectedGenre = selectedGenre; }
+
+    private int selectedPage;
+    public int getSelectedPage() { return selectedPage; }
+    public void setSelectedPage(int selectedPage) { this.selectedPage = selectedPage; }
+
     public MangaViewModel() {
         httpClient = new OkHttpClient();
-        pieceList = new ArrayList<>();
+        list = new ArrayList<>();
     }
 
-    public void getManga(int page, String order, String type, String status, int genre) {
+    public void getManga(int page, String order, String type, String status, long genre) {
         Request.Builder requestBuilder = new Request.Builder()
                 .url("https://shikimori.me/api/genres")
                 .header("Authorization", "User-Agent ShikiOAuthTest");
@@ -102,20 +122,20 @@ public class MangaViewModel extends ViewModel {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    JSONArray pieceJsonArray = null;
+                    JSONArray jsonArray = null;
                     try {
-                        pieceJsonArray = new JSONArray(response.body().string());
+                        jsonArray = new JSONArray(response.body().string());
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
                     Type listType = new TypeToken<List<Manga>>() {}.getType();
                     Gson gson = new Gson();
-                    pieceList = gson.fromJson(pieceJsonArray.toString(), listType);
-                    for (Manga manga : pieceList) {
+                    list = gson.fromJson(jsonArray.toString(), listType);
+                    for (Manga manga : list) {
                         manga.getImage().setOriginal("https://shikimori.me" + manga.getImage().getOriginal());
                     }
                     // Обновляем значение LiveData с списком аниме
-                    pieceListLiveData.postValue(pieceList);
+                    listLiveData.postValue(list);
                     // Обновляем сообщение об успешном выполнении
                     messageLiveData.postValue("Success");
                 } else {
@@ -133,10 +153,10 @@ public class MangaViewModel extends ViewModel {
     }
 
 
-    public void getMangas(String searchAnime) {
+    public void getManga(String search) {
         try {
-            if (searchAnime != null) {
-                String apiUrl = String.format("/api/animes?search=%s&limit=50", searchAnime);
+            if (search != null) {
+                String apiUrl = String.format("/api/mangas?search=%s&limit=50", search);
 
                 Request.Builder requestBuilder = new Request.Builder()
                         .url("https://shikimori.me" + apiUrl)
@@ -147,26 +167,37 @@ public class MangaViewModel extends ViewModel {
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         if (response.isSuccessful()) {
-                            Type listType = new TypeToken<List<Anime>>() {}.getType();
+                            JSONArray jsonArray = null;
+                            try {
+                                jsonArray = new JSONArray(response.body().string());
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
+                            Type listType = new TypeToken<List<Manga>>() {}.getType();
                             Gson gson = new Gson();
-                            pieceList = gson.fromJson(response.body().string(), listType);
-                            for (Manga manga : pieceList) {
+                            list = gson.fromJson(jsonArray.toString(), listType);
+                            for (Manga manga : list) {
                                 manga.getImage().setOriginal("https://shikimori.me" + manga.getImage().getOriginal());
                             }
+                            // Обновляем значение LiveData с списком аниме
+                            listLiveData.postValue(list);
+                            // Обновляем сообщение об успешном выполнении
+                            messageLiveData.postValue("Success");
                         } else {
-                            // Обработка неуспешного ответа
+                            // Обновляем сообщение об ошибке
+                            messageLiveData.postValue("Failure");
                         }
                     }
 
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        // Обработка ошибки
-                        Log.e("AnimeManager", e.getMessage());
+                        // Обновляем сообщение об ошибке
+                        messageLiveData.postValue("Error");
                     }
                 });
             }
         } catch (Exception e) {
-            Log.e("AnimeManager", e.getMessage());
+            Log.e("MangaManager", e.getMessage());
         }
 
     }

@@ -28,14 +28,14 @@ import okhttp3.Response;
 
 public class RanobeViewModel extends ViewModel {
 
-    private MutableLiveData<List<Manga>> pieceListLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<Manga>> listLiveData = new MutableLiveData<>();
     private MutableLiveData<Genre[]> genreLiveData = new MutableLiveData<>();
     private MutableLiveData<String> messageLiveData = new MutableLiveData<>();
 
     // Другие методы и поля вашего AnimeViewModel...
 
-    public LiveData<List<Manga>> getMangaListLiveData() {
-        return pieceListLiveData;
+    public LiveData<List<Manga>> getListLiveData() {
+        return listLiveData;
     }
 
     public LiveData<Genre[]> getGenreLiveData() {
@@ -47,16 +47,32 @@ public class RanobeViewModel extends ViewModel {
     }
 
     private OkHttpClient httpClient;
-    public List<Manga> pieceList;
+    public List<Manga> list;
     public Genre[] genres;
     private String message;
 
+    private String selectedOrder;
+    public String getSelectedOrder() { return selectedOrder; }
+    public void setSelectedOrder(String selectedOrder) { this.selectedOrder = selectedOrder; }
+
+    private String selectedStatus;
+    public String getSelectedStatus() { return selectedStatus; }
+    public void setSelectedStatus(String selectedStatus) { this.selectedStatus = selectedStatus; }
+
+    private long selectedGenre;
+    public long getSelectedGenre() { return selectedGenre; }
+    public void setSelectedGenre(long selectedGenre) { this.selectedGenre = selectedGenre; }
+
+    private int selectedPage;
+    public int getSelectedPage() { return selectedPage; }
+    public void setSelectedPage(int selectedPage) { this.selectedPage = selectedPage; }
+
     public RanobeViewModel() {
         httpClient = new OkHttpClient();
-        pieceList = new ArrayList<>();
+        list = new ArrayList<>();
     }
 
-    public void getManga(int page, String order, String type, String status, int genre) {
+    public void getRanobe(int page, String order, String status, long genre) {
         Request.Builder requestBuilder = new Request.Builder()
                 .url("https://shikimori.me/api/genres")
                 .header("Authorization", "User-Agent ShikiOAuthTest");
@@ -88,34 +104,33 @@ public class RanobeViewModel extends ViewModel {
 
         String apiUrl;
         if (genre == 0) {
-            apiUrl = String.format("/api/ranobe?limit=50&order=%s&page=%d&kind=%s&status=%s", order, page, type, status);
+            apiUrl = String.format("/api/ranobe?limit=50&order=%s&page=%d&status=%s", order, page, status);
         } else {
-            apiUrl = String.format("/api/ranobe?limit=50&order=%s&page=%d&kind=%s&status=%s&genre=%d", order, page, type, status, genre);
+            apiUrl = String.format("/api/ranobe?limit=50&order=%s&page=%d&status=%s&genre=%d", order, page, status, genre);
         }
         request = new Request.Builder()
                 .url("https://shikimori.me" + apiUrl)
                 .header("Authorization", "User-Agent ShikiOAuthTest")
                 .build();
 
-        // Выполняем запрос на получение списка аниме
         httpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    JSONArray pieceJsonArray = null;
+                    JSONArray jsonArray = null;
                     try {
-                        pieceJsonArray = new JSONArray(response.body().string());
+                        jsonArray = new JSONArray(response.body().string());
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
                     Type listType = new TypeToken<List<Manga>>() {}.getType();
                     Gson gson = new Gson();
-                    pieceList = gson.fromJson(pieceJsonArray.toString(), listType);
-                    for (Manga manga : pieceList) {
-                        manga.getImage().setOriginal("https://shikimori.me" + manga.getImage().getOriginal());
+                    list = gson.fromJson(jsonArray.toString(), listType);
+                    for (Manga ranobe : list) {
+                        ranobe.getImage().setOriginal("https://shikimori.me" + ranobe.getImage().getOriginal());
                     }
                     // Обновляем значение LiveData с списком аниме
-                    pieceListLiveData.postValue(pieceList);
+                    listLiveData.postValue(list);
                     // Обновляем сообщение об успешном выполнении
                     messageLiveData.postValue("Success");
                 } else {
@@ -133,10 +148,10 @@ public class RanobeViewModel extends ViewModel {
     }
 
 
-    public void getMangas(String search) {
+    public void getRanobe(String search) {
         try {
             if (search != null) {
-                String apiUrl = String.format("/api/animes?search=%s&limit=50", search);
+                String apiUrl = String.format("/api/ranobe?search=%s&limit=50", search);
 
                 Request.Builder requestBuilder = new Request.Builder()
                         .url("https://shikimori.me" + apiUrl)
@@ -147,26 +162,37 @@ public class RanobeViewModel extends ViewModel {
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         if (response.isSuccessful()) {
-                            Type listType = new TypeToken<List<Anime>>() {}.getType();
-                            Gson gson = new Gson();
-                            pieceList = gson.fromJson(response.body().string(), listType);
-                            for (Manga manga : pieceList) {
-                                manga.getImage().setOriginal("https://shikimori.me" + manga.getImage().getOriginal());
+                            JSONArray jsonArray = null;
+                            try {
+                                jsonArray = new JSONArray(response.body().string());
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
                             }
+                            Type listType = new TypeToken<List<Manga>>() {}.getType();
+                            Gson gson = new Gson();
+                            list = gson.fromJson(jsonArray.toString(), listType);
+                            for (Manga ranobe : list) {
+                                ranobe.getImage().setOriginal("https://shikimori.me" + ranobe.getImage().getOriginal());
+                            }
+                            // Обновляем значение LiveData с списком аниме
+                            listLiveData.postValue(list);
+                            // Обновляем сообщение об успешном выполнении
+                            messageLiveData.postValue("Success");
                         } else {
-                            // Обработка неуспешного ответа
+                            // Обновляем сообщение об ошибке
+                            messageLiveData.postValue("Failure");
                         }
                     }
 
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        // Обработка ошибки
-                        Log.e("AnimeManager", e.getMessage());
+                        // Обновляем сообщение об ошибке
+                        messageLiveData.postValue("Error");
                     }
                 });
             }
         } catch (Exception e) {
-            Log.e("AnimeManager", e.getMessage());
+            Log.e("MangaManager", e.getMessage());
         }
 
     }

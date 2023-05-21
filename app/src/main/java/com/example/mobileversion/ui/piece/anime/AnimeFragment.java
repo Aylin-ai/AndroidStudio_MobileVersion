@@ -200,31 +200,24 @@ public class AnimeFragment extends Fragment {
                     break;
                 case "tv":
                     selectedItem = "ТВ";
-                    animeViewModel.setSelectedKind("tv");
                     break;
                 case "movie":
                     selectedItem = "Фильм";
-                    animeViewModel.setSelectedKind("movie");
                     break;
                 case "ova":
                     selectedItem = "OVA";
-                    animeViewModel.setSelectedKind("ova");
                     break;
                 case "ona":
                     selectedItem = "ONA";
-                    animeViewModel.setSelectedKind("ona");
                     break;
                 case "tv_13":
                     selectedItem = "TV 13 серий";
-                    animeViewModel.setSelectedKind("tv_13");
                     break;
                 case "tv_24":
                     selectedItem = "TV 24 серии";
-                    animeViewModel.setSelectedKind("tv_24");
                     break;
                 case "tv_48":
                     selectedItem = "TV 48 серий";
-                    animeViewModel.setSelectedKind("tv_48");
                     break;
             }
             selectedPosition = Arrays.asList(options).indexOf(selectedItem);

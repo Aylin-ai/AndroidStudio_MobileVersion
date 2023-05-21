@@ -30,6 +30,10 @@ public class RanobeAdapter extends RecyclerView.Adapter<RanobeAdapter.ViewHolder
         return new ViewHolder(view);
     }
 
+    public void setRanobeList(List<Manga> pieceList){
+        this.pieceList = pieceList;
+    }
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Manga ranobe = pieceList.get(position);
