@@ -10,4 +10,69 @@
     <string name="anime">Anime</string>
     <string name="manga">Manga</string>
     <string name="ranobe">Ranobe</string>
+
+    <string-array name="spinner_anime_list">
+        <item>Нет</item>
+        <item>Смотрю</item>
+        <item>В планах</item>
+        <item>Брошено</item>
+        <item>Просмотрено</item>
+        <item>Любимое</item>
+    </string-array>
+
+    <string-array name="spinner_manga_list">
+        <item>Нет</item>
+        <item>Читаю</item>
+        <item>В планах</item>
+        <item>Брошено</item>
+        <item>Прочитано</item>
+        <item>Любимое</item>
+    </string-array>
+
+    <string-array name="spinner_piece_order">
+        <item>По рейтингу</item>
+        <item>По типу</item>
+        <item>По популярности</item>
+        <item>По имени</item>
+        <item>По дате релиза</item>
+        <item>По статусу</item>
+        <item>Случайно</item>
+    </string-array>
+
+    <string-array name="spinner_anime_kind">
+        <item>Всё</item>
+        <item>ТВ</item>
+        <item>Фильм</item>
+        <item>OVA</item>
+        <item>ONA</item>
+        <item>TV 13 серий</item>
+        <item>TV 24 серии</item>
+        <item>TV 48 серий</item>
+    </string-array>
+
+    <string-array name="spinner_manga_kind">
+        <item>Всё</item>
+        <item>Манга</item>
+        <item>Манхва</item>
+        <item>Манхуа</item>
+        <item>One Shot</item>
+        <item>Додзинси</item>
+    </string-array>
+
+    <string-array name="spinner_anime_status">
+        <item>Всё</item>
+        <item>Анонс</item>
+        <item>Онгоинг</item>
+        <item>Вышел</item>
+    </string-array>
+
+    <string-array name="spinner_manga_status">
+        <item>Всё</item>
+        <item>Анонс</item>
+        <item>Онгоинг</item>
+        <item>Вышла</item>
+        <item>Заморожена</item>
+        <item>Остановлена</item>
+    </string-array>
+
 </resources>

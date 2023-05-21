@@ -53,6 +53,26 @@ public class AnimeViewModel extends ViewModel {
     public Genre[] animeGenres;
     private String message;
 
+    private String selectedOrder;
+    public String getSelectedOrder() { return selectedOrder; }
+    public void setSelectedOrder(String selectedOrder) { this.selectedOrder = selectedOrder; }
+
+    private String selectedKind;
+    public String getSelectedKind() { return selectedKind; }
+    public void setSelectedKind(String selectedKind) { this.selectedKind = selectedKind; }
+
+    private String selectedStatus;
+    public String getSelectedStatus() { return selectedStatus; }
+    public void setSelectedStatus(String selectedStatus) { this.selectedStatus = selectedStatus; }
+
+    private int selectedGenre;
+    public int getSelectedGenre() { return selectedGenre; }
+    public void setSelectedGenre(int selectedGenre) { this.selectedGenre = selectedGenre; }
+
+    private int selectedPage;
+    public int getSelectedPage() { return selectedPage; }
+    public void setSelectedPage(int selectedPage) { this.selectedPage = selectedPage; }
+
     public AnimeViewModel() {
         httpClient = new OkHttpClient();
         animeList = new ArrayList<>();

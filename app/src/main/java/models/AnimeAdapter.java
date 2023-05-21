@@ -23,6 +23,10 @@ public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> 
         this.animeList = animeList;
     }
 
+    public void setAnimeList(List<Anime> animeList){
+        this.animeList = animeList;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

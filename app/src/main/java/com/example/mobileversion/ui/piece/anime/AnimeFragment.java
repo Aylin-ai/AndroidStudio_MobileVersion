@@ -1,9 +1,24 @@
 package com.example.mobileversion.ui.piece.anime;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListPopupWindow;
+import android.widget.PopupMenu;
+import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,8 +30,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobileversion.R;
 import com.example.mobileversion.databinding.FragmentAnimeBinding;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import models.Anime;
@@ -38,8 +55,17 @@ public class AnimeFragment extends Fragment {
         animeList = root.findViewById(R.id.animeList);
         animeList.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        animeViewModel.setSelectedPage(1);
+        animeViewModel.setSelectedOrder("ranked");
+        animeViewModel.setSelectedKind("");
+        animeViewModel.setSelectedStatus("");
+        animeViewModel.setSelectedGenre(0);
 
-        animeViewModel.getAnimes(1, "ranked", "", "", 0);
+        animeViewModel.getAnimes(animeViewModel.getSelectedPage(),
+                animeViewModel.getSelectedOrder(),
+                animeViewModel.getSelectedKind(),
+                animeViewModel.getSelectedStatus(),
+                animeViewModel.getSelectedGenre());
         animeViewModel.getAnimeListLiveData().observe(getViewLifecycleOwner(), new Observer<List<Anime>>() {
             @Override
             public void onChanged(List<Anime> animeListData) {
@@ -56,6 +82,18 @@ public class AnimeFragment extends Fragment {
             }
         });
 
+        FloatingActionButton filtr_button = root.findViewById(R.id.filtrButton); // Находите кнопку по ее идентификатору
+
+        filtr_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopupMenu(filtr_button);
+            }
+        });
+
+
+
+
         return root;
     }
 
@@ -64,5 +102,157 @@ public class AnimeFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    private void showPopupMenu(View anchorView) {
+        AnimeViewModel animeViewModel =
+                new ViewModelProvider(this).get(AnimeViewModel.class);
+        PopupMenu popupMenu = new PopupMenu(getActivity(), anchorView);
+        popupMenu.getMenuInflater().inflate(R.menu.anime_filtr_menu, popupMenu.getMenu());
+
+        // Обработчик клика на пункты меню
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // Обработка выбора пунктов меню
+                switch (item.getItemId()) {
+                    case R.id.menu_genres:
+
+                        return true;
+                    case R.id.menu_status:
+                        showDropdownList(adapter, getResources().getStringArray(R.array.spinner_anime_status));
+                        return true;
+                    case R.id.menu_kinds:
+                        showDropdownList(adapter, getResources().getStringArray(R.array.spinner_anime_kind));
+                        return true;
+                    case R.id.menu_orders:
+                        showDropdownList(adapter, getResources().getStringArray(R.array.spinner_piece_order));
+                        return true;
+                    case R.id.menu_pages:
+                        showDropdownList(adapter, new String[] {});
+                        return true;
+                    case R.id.menu_search:
+                        // Действия для кастомного пункта меню
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+
+        popupMenu.show();
+    }
+
+    private void showDropdownList(AnimeAdapter animeAdapter, String[] options) {
+        AnimeViewModel animeViewModel =
+                new ViewModelProvider(this).get(AnimeViewModel.class);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Выберите опцию");
+
+        // Создание и настройка адаптера для списка
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, options);
+
+        // Создание Spinner и установка адаптера
+        final Spinner spinner = new Spinner(getActivity());
+        spinner.setAdapter(adapter);
+
+        // Установка Spinner в диалоговое окно
+        builder.setView(spinner);
+
+        // Установка кнопок "OK" и "Отмена"
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // Получение выбранного значения из Spinner
+                String selectedOption = (String) spinner.getSelectedItem();
+                // Выполнение действий с выбранным значением
+                if (Arrays.equals(options, getResources().getStringArray(R.array.spinner_piece_order))){
+                    switch (selectedOption){
+                        case "По рейтингу":
+                            animeViewModel.setSelectedOrder("ranked");
+                            break;
+                        case "По типу":
+                            animeViewModel.setSelectedOrder("kind");
+                            break;
+                        case "По популярности":
+                            animeViewModel.setSelectedOrder("popularity");
+                            break;
+                        case "По имени":
+                            animeViewModel.setSelectedOrder("name");
+                            break;
+                        case "По дате релиза":
+                            animeViewModel.setSelectedOrder("aired_on");
+                            break;
+                        case "По статусу":
+                            animeViewModel.setSelectedOrder("status");
+                            break;
+                        case "Случайно":
+                            animeViewModel.setSelectedOrder("random");
+                            break;
+                    }
+                } else if (Arrays.equals(options, getResources().getStringArray(R.array.spinner_anime_status))) {
+                    switch (selectedOption){
+                        case "Всё":
+                            animeViewModel.setSelectedStatus("");
+                            break;
+                        case "Анонс":
+                            animeViewModel.setSelectedStatus("anons");
+                            break;
+                        case "Онгоинг":
+                            animeViewModel.setSelectedStatus("ongoing");
+                            break;
+                        case "Вышел":
+                            animeViewModel.setSelectedStatus("released");
+                            break;
+                    }
+                } else if (Arrays.equals(options, getResources().getStringArray(R.array.spinner_anime_kind))) {
+                    switch (selectedOption){
+                        case "Всё":
+                            animeViewModel.setSelectedKind("");
+                            break;
+                        case "ТВ":
+                            animeViewModel.setSelectedKind("tv");
+                            break;
+                        case "Фильм":
+                            animeViewModel.setSelectedKind("movie");
+                            break;
+                        case "OVA":
+                            animeViewModel.setSelectedKind("ova");
+                            break;
+                        case "ONA":
+                            animeViewModel.setSelectedKind("ona");
+                            break;
+                        case "TV 13 серий":
+                            animeViewModel.setSelectedKind("tv_13");
+                            break;
+                        case "TV 24 серии":
+                            animeViewModel.setSelectedKind("tv_24");
+                            break;
+                        case "TV 48 серий":
+                            animeViewModel.setSelectedKind("tv_48");
+                            break;
+                    }
+                }
+                animeViewModel.getAnimes(animeViewModel.getSelectedPage(),
+                        animeViewModel.getSelectedOrder(),
+                        animeViewModel.getSelectedKind(),
+                        animeViewModel.getSelectedStatus(),
+                        animeViewModel.getSelectedGenre());
+                animeViewModel.getAnimeListLiveData().observe(getViewLifecycleOwner(), new Observer<List<Anime>>() {
+                    @Override
+                    public void onChanged(List<Anime> animeListData) {
+                        // Обновляем адаптер с новыми данными
+                        animeAdapter.setAnimeList(animeListData);
+                        animeAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        });
+        builder.setNegativeButton("Отмена", null);
+
+        // Отображение диалогового окна
+        builder.show();
+    }
+
 
 }
