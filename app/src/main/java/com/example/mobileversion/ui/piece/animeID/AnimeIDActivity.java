@@ -13,12 +13,22 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.mobileversion.R;
+import com.example.mobileversion.ui.piece.mangaID.MangaIDActivity;
 
+import java.util.List;
+
+import models.Anime;
+import models.AnimeAdapter;
 import models.AnimeID;
 import models.Genre;
+import models.Manga;
+import models.MangaAdapter;
 import models.Studio;
 
 public class AnimeIDActivity extends AppCompatActivity {
+    private AnimeAdapter animeAdapter;
+    private MangaAdapter mangaAdapter;
+
     private long id = 1;
     private ImageView animeImage;
     private TextView animeRussianTextView;
@@ -35,28 +45,27 @@ public class AnimeIDActivity extends AppCompatActivity {
     private RecyclerView relatedAnimeRecyclerView;
     private RecyclerView relatedMangaRecyclerView;
     private RecyclerView relatedRanobeRecyclerView;
-    private RecyclerView animeSimilarRecyclerView;
+    private RecyclerView SimilarRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_anime_id);
-
         AnimeIDViewModel animeIDViewModel =
                 new ViewModelProvider(this).get(AnimeIDViewModel.class);
 
         animeScreensRecyclerView = findViewById(R.id.animeScreensRecyclerView);
-        animeScreensRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        animeScreensRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         animeVideosRecyclerView = findViewById(R.id.animeVideosRecyclerView);
-        animeVideosRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        animeVideosRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         relatedAnimeRecyclerView = findViewById(R.id.relatedAnimeRecyclerView);
-        relatedAnimeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        relatedAnimeRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         relatedMangaRecyclerView = findViewById(R.id.relatedMangaRecyclerView);
-        relatedMangaRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        relatedMangaRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         relatedRanobeRecyclerView = findViewById(R.id.relatedRanobeRecyclerView);
-        relatedRanobeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        animeSimilarRecyclerView = findViewById(R.id.animeSimilarRecyclerView);
-        animeSimilarRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        relatedRanobeRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        SimilarRecyclerView = findViewById(R.id.SimilarRecyclerView);
+        SimilarRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         animeGenresTextView = findViewById(R.id.animeGenresTextView);
         animeStudiosTextView = findViewById(R.id.animeStudiosTextView);
@@ -71,7 +80,7 @@ public class AnimeIDActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent != null) {
-            id = intent.getLongExtra("AnimeId", 0);
+            id = intent.getLongExtra("Id", 0);
             animeIDViewModel.getAnime((int) id);
             animeIDViewModel.getAnimeLiveData().observe(this, new Observer<AnimeID>() {
                 @Override
@@ -97,6 +106,86 @@ public class AnimeIDActivity extends AppCompatActivity {
                     animeStatusTextView.setText(animeIDViewModel.animeID.getStatus());
                     animeSeriesCountTextView.setText(String.format("%d", animeIDViewModel.animeID.getEpisodes()));
                     animeDurabilityTextView.setText(String.format("%d", animeIDViewModel.animeID.getDuration()));
+                }
+            });
+
+            animeIDViewModel.getrelatedAnimeLiveData().observe(this, new Observer<List<Anime>>() {
+                @Override
+                public void onChanged(List<Anime> animeListData) {
+                    // Обновляем адаптер с новыми данными
+                    animeAdapter = new AnimeAdapter(animeListData);
+
+                    animeAdapter.setOnItemClickListener(new AnimeAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(Anime anime) {
+                            // Обработайте нажатие кнопки для выбранного аниме
+                            Intent intent = new Intent(AnimeIDActivity.this, AnimeIDActivity.class);
+
+                            intent.putExtra("Id", anime.getId());
+                            startActivity(intent);
+                        }
+                    });
+
+                    relatedAnimeRecyclerView.setAdapter(animeAdapter);
+                }
+            });
+            animeIDViewModel.getrelatedMangaLiveData().observe(this, new Observer<List<Manga>>() {
+                @Override
+                public void onChanged(List<Manga> mangaListData) {
+                    // Обновляем адаптер с новыми данными
+                    mangaAdapter = new MangaAdapter(mangaListData);
+
+                    mangaAdapter.setOnItemClickListener(new MangaAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(Manga manga) {
+                            // Обработайте нажатие кнопки для выбранного аниме
+                            Intent intent = new Intent(AnimeIDActivity.this, MangaIDActivity.class);
+
+                            intent.putExtra("Id", manga.getId());
+                            startActivity(intent);
+                        }
+                    });
+
+                    relatedMangaRecyclerView.setAdapter(mangaAdapter);
+                }
+            });
+            animeIDViewModel.getrelatedRanobeLiveData().observe(this, new Observer<List<Manga>>() {
+                @Override
+                public void onChanged(List<Manga> mangaListData) {
+                    // Обновляем адаптер с новыми данными
+                    mangaAdapter = new MangaAdapter(mangaListData);
+
+                    mangaAdapter.setOnItemClickListener(new MangaAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(Manga ranobe) {
+                            // Обработайте нажатие кнопки для выбранного аниме
+                            Intent intent = new Intent(AnimeIDActivity.this, MangaIDActivity.class);
+
+                            intent.putExtra("Id", ranobe.getId());
+                            startActivity(intent);
+                        }
+                    });
+
+                    relatedRanobeRecyclerView.setAdapter(mangaAdapter);
+                }
+            });
+            animeIDViewModel.getsimilarLiveData().observe(this, new Observer<List<Anime>>() {
+                @Override
+                public void onChanged(List<Anime> animeListData) {
+                    // Обновляем адаптер с новыми данными
+                    animeAdapter = new AnimeAdapter(animeListData);
+
+                    animeAdapter.setOnItemClickListener(new AnimeAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(Anime anime) {
+                            Intent intent = new Intent(AnimeIDActivity.this, AnimeIDActivity.class);
+
+                            intent.putExtra("Id", anime.getId());
+                            startActivity(intent);
+                        }
+                    });
+
+                    SimilarRecyclerView.setAdapter(animeAdapter);
                 }
             });
         }
