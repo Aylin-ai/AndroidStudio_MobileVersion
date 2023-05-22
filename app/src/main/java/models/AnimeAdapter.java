@@ -17,7 +17,12 @@ import com.example.mobileversion.R;
 import java.util.List;
 
 public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> {
+
+    public interface OnItemClickListener {
+        void onItemClick(Anime anime);
+    }
     private List<Anime> animeList;
+    private OnItemClickListener itemClickListener;
 
     public AnimeAdapter(List<Anime> animeList) {
         this.animeList = animeList;
@@ -27,11 +32,15 @@ public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> 
         this.animeList = animeList;
     }
 
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.itemClickListener = listener;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_anime, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, itemClickListener, animeList);
     }
 
     @Override
@@ -52,7 +61,11 @@ public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> 
         holder.detailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                int adapterPosition = holder.getAdapterPosition();
+                if (adapterPosition != RecyclerView.NO_POSITION && itemClickListener != null) {
+                    Anime clickedAnime = animeList.get(adapterPosition);
+                    itemClickListener.onItemClick(clickedAnime);
+                }
             }
         });
     }
@@ -72,7 +85,7 @@ public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> 
         TextView pieceScore;
         Button detailsButton;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, OnItemClickListener listener, List<Anime> animeList) {
             super(itemView);
             pieceImage = itemView.findViewById(R.id.pieceImage);
             userListSpinner = itemView.findViewById(R.id.userListSpinner);
@@ -82,6 +95,17 @@ public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> 
             pieceStatus = itemView.findViewById(R.id.pieceStatus);
             pieceScore = itemView.findViewById(R.id.pieceScore);
             detailsButton = itemView.findViewById(R.id.detailsButton);
+
+            detailsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION && listener != null) {
+                        Anime anime = animeList.get(position);
+                        listener.onItemClick(anime);
+                    }
+                }
+            });
         }
     }
 }

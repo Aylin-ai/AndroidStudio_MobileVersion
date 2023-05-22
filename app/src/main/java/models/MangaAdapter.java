@@ -17,21 +17,29 @@ import com.example.mobileversion.R;
 import java.util.List;
 
 public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> {
+    public interface OnItemClickListener {
+        void onItemClick(Manga manga);
+    }
     private List<Manga> mangaList;
+    private MangaAdapter.OnItemClickListener itemClickListener;
 
     public MangaAdapter(List<Manga> animeList) {
         this.mangaList = animeList;
+    }
+
+    public void setMangaList(List<Manga> mangaList){
+        this.mangaList = mangaList;
+    }
+
+    public void setOnItemClickListener(MangaAdapter.OnItemClickListener listener) {
+        this.itemClickListener = listener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_anime, parent, false);
-        return new ViewHolder(view);
-    }
-
-    public void setMangaList(List<Manga> mangaList){
-        this.mangaList = mangaList;
+        return new ViewHolder(view, itemClickListener, mangaList);
     }
 
     @Override
@@ -52,7 +60,11 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> 
         holder.detailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                int adapterPosition = holder.getAdapterPosition();
+                if (adapterPosition != RecyclerView.NO_POSITION && itemClickListener != null) {
+                    Manga clickedManga = mangaList.get(adapterPosition);
+                    itemClickListener.onItemClick(clickedManga);
+                }
             }
         });
     }
@@ -72,7 +84,7 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> 
         TextView pieceScore;
         Button detailsButton;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, MangaAdapter.OnItemClickListener listener, List<Manga> mangaList) {
             super(itemView);
             pieceImage = itemView.findViewById(R.id.pieceImage);
             userListSpinner = itemView.findViewById(R.id.userListSpinner);
@@ -82,6 +94,17 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> 
             pieceStatus = itemView.findViewById(R.id.pieceStatus);
             pieceScore = itemView.findViewById(R.id.pieceScore);
             detailsButton = itemView.findViewById(R.id.detailsButton);
+
+            detailsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION && listener != null) {
+                        Manga manga = mangaList.get(position);
+                        listener.onItemClick(manga);
+                    }
+                }
+            });
         }
     }
 }

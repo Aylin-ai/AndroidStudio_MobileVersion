@@ -2,6 +2,7 @@ package com.example.mobileversion.ui.piece.manga;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mobileversion.R;
 import com.example.mobileversion.databinding.FragmentMangaBinding;
 import com.example.mobileversion.ui.piece.anime.AnimeViewModel;
+import com.example.mobileversion.ui.piece.animeID.AnimeIDActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ import java.util.stream.IntStream;
 
 import models.Anime;
 import models.AnimeAdapter;
+import models.AnimeID;
 import models.Genre;
 import models.Manga;
 import models.MangaAdapter;
@@ -69,6 +72,17 @@ public class MangaFragment extends Fragment {
             @Override
             public void onChanged(List<Manga> mangas) {
                 adapter = new MangaAdapter(mangas);
+
+                adapter.setOnItemClickListener(new MangaAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(Manga manga) {
+                        Intent intent = new Intent(getActivity(), AnimeIDActivity.class);
+
+                        intent.putExtra("Id", manga.getId());
+                        startActivity(intent);
+                    }
+                });
+
                 pieceList.setAdapter(adapter);
             }
         });

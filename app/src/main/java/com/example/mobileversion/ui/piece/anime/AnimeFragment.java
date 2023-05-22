@@ -2,6 +2,7 @@ package com.example.mobileversion.ui.piece.anime;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -12,6 +13,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -22,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobileversion.R;
 import com.example.mobileversion.databinding.FragmentAnimeBinding;
+import com.example.mobileversion.ui.piece.animeID.AnimeIDActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -32,6 +35,7 @@ import java.util.stream.IntStream;
 
 import models.Anime;
 import models.AnimeAdapter;
+import models.AnimeID;
 import models.Genre;
 
 public class AnimeFragment extends Fragment {
@@ -66,6 +70,18 @@ public class AnimeFragment extends Fragment {
             public void onChanged(List<Anime> animeListData) {
                 // Обновляем адаптер с новыми данными
                 adapter = new AnimeAdapter(animeListData);
+
+                adapter.setOnItemClickListener(new AnimeAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(Anime anime) {
+                        // Обработайте нажатие кнопки для выбранного аниме
+                        Intent intent = new Intent(getActivity(), AnimeIDActivity.class);
+
+                        intent.putExtra("Id", anime.getId());
+                        startActivity(intent);
+                    }
+                });
+
                 animeList.setAdapter(adapter);
             }
         });
@@ -85,9 +101,6 @@ public class AnimeFragment extends Fragment {
                 showPopupMenu(filtr_button);
             }
         });
-
-
-
 
         return root;
     }
