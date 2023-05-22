@@ -1,5 +1,7 @@
 package com.example.mobileversion.ui.piece.animeID;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -7,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,6 +24,7 @@ import models.AnimeID;
 import models.Manga;
 import models.Related;
 import models.Screenshots;
+import models.UriTypeAdapter;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -83,7 +87,9 @@ public class AnimeIDViewModel extends ViewModel {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful()){
-                    Gson gson = new Gson();
+                    Gson gson = new GsonBuilder()
+                            .registerTypeAdapter(Uri.class, new UriTypeAdapter())
+                            .create();
                     Type animeId = new TypeToken<AnimeID>() {}.getType();
                     animeID = gson.fromJson(response.body().string(), animeId);
                     animeLiveData.postValue(animeID);
@@ -117,7 +123,9 @@ public class AnimeIDViewModel extends ViewModel {
                         String message = "Скрины";
                     }
                     Type listType = new TypeToken<List<Screenshots>>() {}.getType();
-                    Gson gson = new Gson();
+                    Gson gson = new GsonBuilder()
+                            .registerTypeAdapter(Uri.class, new UriTypeAdapter())
+                            .create();
                     screens = gson.fromJson(screensJsonArray.toString(), listType);
                     for (Screenshots screen : screens) {
                         screen.setOriginal(BASE_URL + screen.getOriginal());
@@ -151,7 +159,9 @@ public class AnimeIDViewModel extends ViewModel {
                     }
 
                     Type listType = new TypeToken<List<Related>>() {}.getType();
-                    Gson gson = new Gson();
+                    Gson gson = new GsonBuilder()
+                            .registerTypeAdapter(Uri.class, new UriTypeAdapter())
+                            .create();
                     List<Related> relatedList = gson.fromJson(relatedJsonArray.toString(), listType);
                     for (Related related : relatedList) {
                         if (related.getAnime() != null) {
@@ -197,7 +207,9 @@ public class AnimeIDViewModel extends ViewModel {
                         String message = "Похожее";
                     }
                     Type listType = new TypeToken<List<Anime>>() {}.getType();
-                    Gson gson = new Gson();
+                    Gson gson = new GsonBuilder()
+                            .registerTypeAdapter(Uri.class, new UriTypeAdapter())
+                            .create();
                     similar = gson.fromJson(similarJsonArray.toString(), listType);
                     for (Anime anime : similar) {
                         anime.getImage().setOriginal("https://shikimori.me" + anime.getImage().getOriginal());

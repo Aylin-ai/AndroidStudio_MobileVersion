@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -14,7 +15,7 @@ import com.example.mobileversion.R;
 import models.AnimeID;
 
 public class AnimeIDActivity extends AppCompatActivity {
-
+    private long id = 1;
     private TextView animeRussianTextView;
     private TextView animeEnglishTextView;
     private TextView animeRatingTextView;
@@ -65,20 +66,22 @@ public class AnimeIDActivity extends AppCompatActivity {
         animeSeriesCountTextView = findViewById(R.id.animeSeriesCountTextView);
         animeDurabilityTextView = findViewById(R.id.animeDurabilityTextView);
 
-        int id = getIntent().getIntExtra("Id", 5515);
-
-        animeIDViewModel.getAnime(id);
-        animeIDViewModel.getAnimeLiveData().observe(this, new Observer<AnimeID>() {
-            @Override
-            public void onChanged(AnimeID animeID) {
-                animeRussianTextView.setText(animeIDViewModel.animeID.getRussian());
-                animeEnglishTextView.setText(animeIDViewModel.animeID.getName());
-                animeRatingTextView.setText(animeIDViewModel.animeID.getRating());
-                animeKindTextView.setText(animeIDViewModel.animeID.getKind());
-                animeStatusTextView.setText(animeIDViewModel.animeID.getStatus());
-                animeSeriesCountTextView.setText(String.format("%d", animeIDViewModel.animeID.getEpisodes()));
-                animeDurabilityTextView.setText(String.format("%d", animeIDViewModel.animeID.getDuration()));
-            }
-        });
+        Intent intent = getIntent();
+        if (intent != null) {
+            id = intent.getLongExtra("AnimeId", 0);
+            animeIDViewModel.getAnime((int) id);
+            animeIDViewModel.getAnimeLiveData().observe(this, new Observer<AnimeID>() {
+                @Override
+                public void onChanged(AnimeID animeID) {
+                    animeRussianTextView.setText(animeIDViewModel.animeID.getRussian());
+                    animeEnglishTextView.setText(animeIDViewModel.animeID.getName());
+                    animeRatingTextView.setText(animeIDViewModel.animeID.getRating());
+                    animeKindTextView.setText(animeIDViewModel.animeID.getKind());
+                    animeStatusTextView.setText(animeIDViewModel.animeID.getStatus());
+                    animeSeriesCountTextView.setText(String.format("%d", animeIDViewModel.animeID.getEpisodes()));
+                    animeDurabilityTextView.setText(String.format("%d", animeIDViewModel.animeID.getDuration()));
+                }
+            });
+        }
     }
 }

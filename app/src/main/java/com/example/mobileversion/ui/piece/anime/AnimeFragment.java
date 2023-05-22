@@ -77,7 +77,7 @@ public class AnimeFragment extends Fragment {
                         // Обработайте нажатие кнопки для выбранного аниме
                         Intent intent = new Intent(getActivity(), AnimeIDActivity.class);
 
-                        intent.putExtra("Id", anime.getId());
+                        intent.putExtra("AnimeId", anime.getId());
                         startActivity(intent);
                     }
                 });
