@@ -20,9 +20,10 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/animeImage"/>
+                android:layout_width="350sp"
+                android:layout_height="400sp"
+                android:id="@+id/animeImage"
+                android:layout_margin="20sp"/>
 
             <Spinner
                 android:layout_width="wrap_content"
@@ -107,11 +108,10 @@
                 android:layout_height="wrap_content"
                 android:text="Студии: " />
 
-            <androidx.recyclerview.widget.RecyclerView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/animeStudiosRecyclerView"
-                android:orientation="horizontal" />
+                android:id="@+id/animeStudiosTextView" />
 
         </LinearLayout>
 
@@ -143,11 +143,10 @@
                 android:layout_height="wrap_content"
                 android:text="Жанры: " />
 
-            <androidx.recyclerview.widget.RecyclerView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/animeGenresRecyclerView"
-                android:orientation="horizontal" />
+                android:id="@+id/animeGenresTextView" />
 
         </LinearLayout>
 

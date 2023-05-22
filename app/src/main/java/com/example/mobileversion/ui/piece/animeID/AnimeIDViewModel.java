@@ -92,6 +92,8 @@ public class AnimeIDViewModel extends ViewModel {
                             .create();
                     Type animeId = new TypeToken<AnimeID>() {}.getType();
                     animeID = gson.fromJson(response.body().string(), animeId);
+                    animeID.getImage().setOriginal(BASE_URL + animeID.getImage().getOriginal());
+                    animeID.getImage().setPreview(BASE_URL + animeID.getImage().getPreview());
                     animeLiveData.postValue(animeID);
                 }
             }
