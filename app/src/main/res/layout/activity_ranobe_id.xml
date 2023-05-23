@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.piece.animeID.AnimeIDActivity">
+    tools:context=".ui.piece.mangaID.MangaIDActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             <ImageView
                 android:layout_width="350sp"
                 android:layout_height="400sp"
-                android:id="@+id/animeImage"
+                android:id="@+id/Image"
                 android:layout_margin="20sp"/>
 
             <Spinner
@@ -35,32 +35,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/animeRussianTextView"
+            android:id="@+id/RussianTextView"
             android:text="AnimeRussian" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/animeEnglishTextView"
+            android:id="@+id/EnglishTextView"
             android:text="AnimeEnglish" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Рейтинг: " />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/animeRatingTextView"
-                android:text="9.5" />
-
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -75,7 +57,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/animeKindTextView"
+                android:id="@+id/KindTextView"
                 android:text="OVA" />
 
         </LinearLayout>
@@ -93,7 +75,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/animeStatusTextView"
+                android:id="@+id/StatusTextView"
                 android:text="Вышел" />
 
         </LinearLayout>
@@ -106,12 +88,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Студии: " />
+                android:text="Издатели: " />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/animeStudiosTextView" />
+                android:id="@+id/PublishersTextView" />
 
         </LinearLayout>
 
@@ -123,12 +105,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Количество серий: " />
+                android:text="Количество глав: " />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/animeSeriesCountTextView"
+                android:id="@+id/ChapterCountTextView"
                 android:text="12" />
 
         </LinearLayout>
@@ -146,80 +128,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/animeGenresTextView" />
+                android:id="@+id/GenresTextView" />
 
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Длительность: " />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/animeDurabilityTextView"
-                android:text="22" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Скриншоты" />
-
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/animeScreensRecyclerView"
-                    android:orientation="horizontal" />
-
-            </HorizontalScrollView>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Видео" />
-
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/animeVideosRecyclerView"
-                    android:orientation="horizontal" />
-
-            </HorizontalScrollView>
-
-        </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"

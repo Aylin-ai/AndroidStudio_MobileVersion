@@ -2,6 +2,7 @@ package com.example.mobileversion.ui.piece.ranobe;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -27,7 +28,10 @@ import com.bumptech.glide.Glide;
 import com.example.mobileversion.R;
 import com.example.mobileversion.databinding.FragmentMangaBinding;
 import com.example.mobileversion.databinding.FragmentRanobeBinding;
+import com.example.mobileversion.ui.piece.animeID.AnimeIDActivity;
 import com.example.mobileversion.ui.piece.manga.MangaViewModel;
+import com.example.mobileversion.ui.piece.mangaID.MangaIDActivity;
+import com.example.mobileversion.ui.piece.ranobeID.RanobeIDActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -36,6 +40,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
+import models.Anime;
+import models.AnimeAdapter;
 import models.Genre;
 import models.Manga;
 import models.MangaAdapter;
@@ -71,6 +77,17 @@ public class RanobeFragment extends Fragment {
             @Override
             public void onChanged(List<Manga> ranobes) {
                 adapter = new RanobeAdapter(ranobes);
+                adapter.setOnItemClickListener(new RanobeAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(Manga manga) {
+                        // Обработайте нажатие кнопки для выбранного аниме
+                        Intent intent = new Intent(getActivity(), RanobeIDActivity.class);
+
+                        intent.putExtra("Id", manga.getId());
+                        startActivity(intent);
+                    }
+                });
+
                 pieceList.setAdapter(adapter);
             }
         });

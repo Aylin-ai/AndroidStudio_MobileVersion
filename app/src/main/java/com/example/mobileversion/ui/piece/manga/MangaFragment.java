@@ -25,6 +25,7 @@ import com.example.mobileversion.R;
 import com.example.mobileversion.databinding.FragmentMangaBinding;
 import com.example.mobileversion.ui.piece.anime.AnimeViewModel;
 import com.example.mobileversion.ui.piece.animeID.AnimeIDActivity;
+import com.example.mobileversion.ui.piece.mangaID.MangaIDActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -76,7 +77,7 @@ public class MangaFragment extends Fragment {
                 adapter.setOnItemClickListener(new MangaAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(Manga manga) {
-                        Intent intent = new Intent(getActivity(), AnimeIDActivity.class);
+                        Intent intent = new Intent(getActivity(), MangaIDActivity.class);
 
                         intent.putExtra("Id", manga.getId());
                         startActivity(intent);

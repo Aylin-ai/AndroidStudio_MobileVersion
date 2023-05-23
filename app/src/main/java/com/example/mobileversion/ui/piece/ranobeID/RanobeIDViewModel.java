@@ -1,4 +1,4 @@
-package com.example.mobileversion.ui.piece.mangaID;
+package com.example.mobileversion.ui.piece.ranobeID;
 
 import android.net.Uri;
 
@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.Anime;
-import models.AnimeID;
 import models.Manga;
 import models.MangaID;
 import models.Related;
@@ -32,25 +31,25 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MangaIDViewModel extends ViewModel {
+public class RanobeIDViewModel extends ViewModel {
 
     private static final String BASE_URL = "https://shikimori.me";
     private static final String USER_AGENT = "ShikiOAuthTest";
-    private static final String MANGA_ENDPOINT_FORMAT = "/api/mangas/%s";
-    private static final String RELATED_ENDPOINT_FORMAT = "/api/mangas/%s/related";
-    private static final String SIMILAR_ENDPOINT_FORMAT = "/api/mangas/%s/similar";
+    private static final String RANOBE_ENDPOINT_FORMAT = "/api/ranobe/%s";
+    private static final String RELATED_ENDPOINT_FORMAT = "/api/ranobe/%s/related";
+    private static final String SIMILAR_ENDPOINT_FORMAT = "/api/ranobe/%s/similar";
 
     private OkHttpClient httpClient;
 
-    public MangaID mangaID;
+    public MangaID ranobeID;
     public List<Screenshots> screens;
     public List<Anime> relatedAnime;
     public List<Manga> relatedManga;
     public List<Manga> relatedRanobe;
     public List<Manga> similar;
 
-    private MutableLiveData<MangaID> mangaLiveData = new MutableLiveData<>();
-    public LiveData<MangaID> getMangaLiveData() { return mangaLiveData; }
+    private MutableLiveData<MangaID> ranobeLiveData = new MutableLiveData<>();
+    public LiveData<MangaID> getRanobeLiveData() { return ranobeLiveData; }
 
     private MutableLiveData<List<Anime>> relatedAnimeLiveData = new MutableLiveData<>();
     public LiveData<List<Anime>> getrelatedAnimeLiveData() { return relatedAnimeLiveData; }
@@ -64,7 +63,7 @@ public class MangaIDViewModel extends ViewModel {
     private MutableLiveData<List<Manga>> similarLiveData = new MutableLiveData<>();
     public LiveData<List<Manga>> getsimilarLiveData() { return similarLiveData; }
 
-    public MangaIDViewModel(){
+    public RanobeIDViewModel(){
         httpClient = new OkHttpClient();
         screens = new ArrayList<>();
         relatedAnime = new ArrayList<>();
@@ -73,8 +72,8 @@ public class MangaIDViewModel extends ViewModel {
         similar = new ArrayList<>();
     }
 
-    public void getManga(int id){
-        String animeUrl = BASE_URL + String.format(MANGA_ENDPOINT_FORMAT, id);
+    public void getRanobe(int id){
+        String animeUrl = BASE_URL + String.format(RANOBE_ENDPOINT_FORMAT, id);
         Request.Builder requestBuilder = new Request.Builder()
                 .url(animeUrl)
                 .header("Authorization", "User-Agent ShikiOAuthTest");
@@ -88,10 +87,10 @@ public class MangaIDViewModel extends ViewModel {
                             .registerTypeAdapter(Uri.class, new UriTypeAdapter())
                             .create();
                     Type animeId = new TypeToken<MangaID>() {}.getType();
-                    mangaID = gson.fromJson(response.body().string(), animeId);
-                    mangaID.getImage().setOriginal(BASE_URL + mangaID.getImage().getOriginal());
-                    mangaID.getImage().setPreview(BASE_URL + mangaID.getImage().getPreview());
-                    mangaLiveData.postValue(mangaID);
+                    ranobeID = gson.fromJson(response.body().string(), animeId);
+                    ranobeID.getImage().setOriginal(BASE_URL + ranobeID.getImage().getOriginal());
+                    ranobeID.getImage().setPreview(BASE_URL + ranobeID.getImage().getPreview());
+                    ranobeLiveData.postValue(ranobeID);
                 }
             }
             @Override
@@ -177,10 +176,10 @@ public class MangaIDViewModel extends ViewModel {
                             .registerTypeAdapter(Uri.class, new UriTypeAdapter())
                             .create();
                     List<Manga> similarList = gson.fromJson(similarJsonArray.toString(), listType);
-                    for (Manga manga : similarList) {
-                        manga.getImage().setOriginal("https://shikimori.me" + manga.getImage().getOriginal());
-                        if (!(manga.getKind().equals("light_novel") || manga.getKind().equals("novel"))) {
-                            similar.add(manga);
+                    for (Manga ranobe : similarList) {
+                        ranobe.getImage().setOriginal("https://shikimori.me" + ranobe.getImage().getOriginal());
+                        if (ranobe.getKind().equals("light_novel") || ranobe.getKind().equals("novel")) {
+                            similar.add(ranobe);
                         }
                     }
                     similarLiveData.postValue(similar);

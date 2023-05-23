@@ -173,7 +173,8 @@ public class AnimeIDViewModel extends ViewModel {
                         } else if (related.getManga() != null) {
                             related.getManga().getImage().setOriginal(BASE_URL + related.getManga().getImage().getOriginal());
                             related.getManga().getImage().setPreview(BASE_URL + related.getManga().getImage().getPreview());
-                            if (related.getManga().getKind().equals("light_novel")) {
+                            if (related.getManga().getKind().equals("light_novel") ||
+                                    related.getManga().getKind().equals("novel")) {
                                 relatedRanobe.add(related.getManga());
                             } else {
                                 relatedManga.add(related.getManga());

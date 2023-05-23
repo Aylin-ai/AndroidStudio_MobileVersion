@@ -17,17 +17,25 @@ import com.example.mobileversion.R;
 import java.util.List;
 
 public class RanobeAdapter extends RecyclerView.Adapter<RanobeAdapter.ViewHolder> {
+    public interface OnItemClickListener {
+        void onItemClick(Manga manga);
+    }
     private List<Manga> pieceList;
+    private RanobeAdapter.OnItemClickListener itemClickListener;
 
     public RanobeAdapter(List<Manga> pieceList) {
         this.pieceList = pieceList;
+    }
+
+    public void setOnItemClickListener(RanobeAdapter.OnItemClickListener listener) {
+        this.itemClickListener = listener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_anime, parent, false);
-        return new ViewHolder(view);
+        return new RanobeAdapter.ViewHolder(view, itemClickListener, pieceList);
     }
 
     public void setRanobeList(List<Manga> pieceList){
@@ -52,7 +60,11 @@ public class RanobeAdapter extends RecyclerView.Adapter<RanobeAdapter.ViewHolder
         holder.detailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                int adapterPosition = holder.getAdapterPosition();
+                if (adapterPosition != RecyclerView.NO_POSITION && itemClickListener != null) {
+                    Manga clickedRanobe = pieceList.get(adapterPosition);
+                    itemClickListener.onItemClick(clickedRanobe);
+                }
             }
         });
     }
@@ -72,7 +84,7 @@ public class RanobeAdapter extends RecyclerView.Adapter<RanobeAdapter.ViewHolder
         TextView pieceScore;
         Button detailsButton;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, RanobeAdapter.OnItemClickListener listener, List<Manga> ranobeList) {
             super(itemView);
             pieceImage = itemView.findViewById(R.id.pieceImage);
             userListSpinner = itemView.findViewById(R.id.userListSpinner);
@@ -82,6 +94,17 @@ public class RanobeAdapter extends RecyclerView.Adapter<RanobeAdapter.ViewHolder
             pieceStatus = itemView.findViewById(R.id.pieceStatus);
             pieceScore = itemView.findViewById(R.id.pieceScore);
             detailsButton = itemView.findViewById(R.id.detailsButton);
+
+            detailsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION && listener != null) {
+                        Manga ranobe = ranobeList.get(position);
+                        listener.onItemClick(ranobe);
+                    }
+                }
+            });
         }
     }
 }

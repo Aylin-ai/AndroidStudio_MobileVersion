@@ -1,4 +1,4 @@
-package com.example.mobileversion.ui.piece.mangaID;
+package com.example.mobileversion.ui.piece.ranobeID;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -13,24 +13,20 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.mobileversion.R;
-import com.example.mobileversion.ui.piece.animeID.AnimeIDActivity;
-import com.example.mobileversion.ui.piece.animeID.AnimeIDViewModel;
-import com.example.mobileversion.ui.piece.ranobeID.RanobeIDActivity;
+import com.example.mobileversion.ui.piece.mangaID.MangaIDViewModel;
 
 import java.util.List;
 
 import models.Anime;
 import models.AnimeAdapter;
-import models.AnimeID;
 import models.Genre;
 import models.Manga;
 import models.MangaAdapter;
 import models.MangaID;
 import models.Publisher;
 import models.RanobeAdapter;
-import models.Studio;
 
-public class MangaIDActivity extends AppCompatActivity {
+public class RanobeIDActivity extends AppCompatActivity {
     private AnimeAdapter animeAdapter;
     private MangaAdapter mangaAdapter;
     private RanobeAdapter ranobeAdapter;
@@ -53,8 +49,8 @@ public class MangaIDActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_id);
-        MangaIDViewModel mangaIDViewModel =
-                new ViewModelProvider(this).get(MangaIDViewModel.class);
+        RanobeIDViewModel ranobeIDViewModel =
+                new ViewModelProvider(this).get(RanobeIDViewModel.class);
 
         relatedAnimeRecyclerView = findViewById(R.id.relatedAnimeRecyclerView);
         relatedAnimeRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -77,33 +73,33 @@ public class MangaIDActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             id = intent.getLongExtra("Id", 0);
-            mangaIDViewModel.getManga((int) id);
-            mangaIDViewModel.getMangaLiveData().observe(this, new Observer<MangaID>() {
+            ranobeIDViewModel.getRanobe((int) id);
+            ranobeIDViewModel.getRanobeLiveData().observe(this, new Observer<MangaID>() {
                 @Override
                 public void onChanged(MangaID mangaID) {
-                    Glide.with(getApplicationContext()).load(mangaIDViewModel.mangaID.getImage().getOriginal()).into(Image);
+                    Glide.with(getApplicationContext()).load(ranobeIDViewModel.ranobeID.getImage().getOriginal()).into(Image);
 
                     StringBuilder publishers = new StringBuilder();
-                    for (Publisher publisher : mangaIDViewModel.mangaID.getPublishers()) {
+                    for (Publisher publisher : ranobeIDViewModel.ranobeID.getPublishers()) {
                         publishers.append(String.format(publisher.getName() + "; "));
                     }
                     PublishersTextView.setText(publishers);
 
                     StringBuilder genres = new StringBuilder();
-                    for (Genre genre : mangaIDViewModel.mangaID.getGenres()) {
+                    for (Genre genre : ranobeIDViewModel.ranobeID.getGenres()) {
                         genres.append(String.format(genre.getRussian() + "; "));
                     }
                     GenresTextView.setText(genres);
 
-                    RussianTextView.setText(mangaIDViewModel.mangaID.getRussian());
-                    EnglishTextView.setText(mangaIDViewModel.mangaID.getName());
-                    KindTextView.setText(mangaIDViewModel.mangaID.getKind());
-                    StatusTextView.setText(mangaIDViewModel.mangaID.getStatus());
-                    ChapterCountTextView.setText(String.format("%d", mangaIDViewModel.mangaID.getChapters()));
+                    RussianTextView.setText(ranobeIDViewModel.ranobeID.getRussian());
+                    EnglishTextView.setText(ranobeIDViewModel.ranobeID.getName());
+                    KindTextView.setText(ranobeIDViewModel.ranobeID.getKind());
+                    StatusTextView.setText(ranobeIDViewModel.ranobeID.getStatus());
+                    ChapterCountTextView.setText(String.format("%d", ranobeIDViewModel.ranobeID.getChapters()));
                 }
             });
 
-            mangaIDViewModel.getrelatedAnimeLiveData().observe(this, new Observer<List<Anime>>() {
+            ranobeIDViewModel.getrelatedAnimeLiveData().observe(this, new Observer<List<Anime>>() {
                 @Override
                 public void onChanged(List<Anime> animeListData) {
                     // Обновляем адаптер с новыми данными
@@ -112,7 +108,7 @@ public class MangaIDActivity extends AppCompatActivity {
                     animeAdapter.setOnItemClickListener(new AnimeAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(Anime anime) {
-                            Intent intent = new Intent(com.example.mobileversion.ui.piece.mangaID.MangaIDActivity.this,
+                            Intent intent = new Intent(com.example.mobileversion.ui.piece.ranobeID.RanobeIDActivity.this,
                                     com.example.mobileversion.ui.piece.animeID.AnimeIDActivity.class);
 
                             intent.putExtra("Id", anime.getId());
@@ -123,7 +119,7 @@ public class MangaIDActivity extends AppCompatActivity {
                     relatedAnimeRecyclerView.setAdapter(animeAdapter);
                 }
             });
-            mangaIDViewModel.getrelatedMangaLiveData().observe(this, new Observer<List<Manga>>() {
+            ranobeIDViewModel.getrelatedMangaLiveData().observe(this, new Observer<List<Manga>>() {
                 @Override
                 public void onChanged(List<Manga> mangaListData) {
                     // Обновляем адаптер с новыми данными
@@ -132,7 +128,7 @@ public class MangaIDActivity extends AppCompatActivity {
                     mangaAdapter.setOnItemClickListener(new MangaAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(Manga manga) {
-                            Intent intent = new Intent(com.example.mobileversion.ui.piece.mangaID.MangaIDActivity.this,
+                            Intent intent = new Intent(com.example.mobileversion.ui.piece.ranobeID.RanobeIDActivity.this,
                                     com.example.mobileversion.ui.piece.mangaID.MangaIDActivity.class);
 
                             intent.putExtra("Id", manga.getId());
@@ -143,7 +139,7 @@ public class MangaIDActivity extends AppCompatActivity {
                     relatedMangaRecyclerView.setAdapter(mangaAdapter);
                 }
             });
-            mangaIDViewModel.getrelatedRanobeLiveData().observe(this, new Observer<List<Manga>>() {
+            ranobeIDViewModel.getrelatedRanobeLiveData().observe(this, new Observer<List<Manga>>() {
                 @Override
                 public void onChanged(List<Manga> mangaListData) {
                     // Обновляем адаптер с новыми данными
@@ -153,7 +149,8 @@ public class MangaIDActivity extends AppCompatActivity {
                         @Override
                         public void onItemClick(Manga ranobe) {
                             // Обработайте нажатие кнопки для выбранного аниме
-                            Intent intent = new Intent(MangaIDActivity.this, RanobeIDActivity.class);
+                            Intent intent = new Intent(com.example.mobileversion.ui.piece.ranobeID.RanobeIDActivity.this,
+                                    com.example.mobileversion.ui.piece.mangaID.MangaIDActivity.class);
 
                             intent.putExtra("Id", ranobe.getId());
                             startActivity(intent);
@@ -163,7 +160,7 @@ public class MangaIDActivity extends AppCompatActivity {
                     relatedRanobeRecyclerView.setAdapter(ranobeAdapter);
                 }
             });
-            mangaIDViewModel.getsimilarLiveData().observe(this, new Observer<List<Manga>>() {
+            ranobeIDViewModel.getsimilarLiveData().observe(this, new Observer<List<Manga>>() {
                 @Override
                 public void onChanged(List<Manga> mangaListData) {
                     // Обновляем адаптер с новыми данными
@@ -172,7 +169,8 @@ public class MangaIDActivity extends AppCompatActivity {
                     mangaAdapter.setOnItemClickListener(new MangaAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(Manga manga) {
-                            Intent intent = new Intent(MangaIDActivity.this, MangaIDActivity.class);
+                            Intent intent = new Intent(com.example.mobileversion.ui.piece.ranobeID.RanobeIDActivity.this,
+                                    com.example.mobileversion.ui.piece.ranobeID.RanobeIDActivity.class);
 
                             intent.putExtra("Id", manga.getId());
                             startActivity(intent);

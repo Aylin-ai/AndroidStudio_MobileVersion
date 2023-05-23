@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.mobileversion.R;
 import com.example.mobileversion.ui.piece.mangaID.MangaIDActivity;
+import com.example.mobileversion.ui.piece.ranobeID.RanobeIDActivity;
 
 import java.util.List;
 
@@ -23,11 +24,13 @@ import models.AnimeID;
 import models.Genre;
 import models.Manga;
 import models.MangaAdapter;
+import models.RanobeAdapter;
 import models.Studio;
 
 public class AnimeIDActivity extends AppCompatActivity {
     private AnimeAdapter animeAdapter;
     private MangaAdapter mangaAdapter;
+    private RanobeAdapter ranobeAdapter;
 
     private long id = 1;
     private ImageView animeImage;
@@ -153,20 +156,20 @@ public class AnimeIDActivity extends AppCompatActivity {
                 @Override
                 public void onChanged(List<Manga> mangaListData) {
                     // Обновляем адаптер с новыми данными
-                    mangaAdapter = new MangaAdapter(mangaListData);
+                    ranobeAdapter = new RanobeAdapter(mangaListData);
 
-                    mangaAdapter.setOnItemClickListener(new MangaAdapter.OnItemClickListener() {
+                    ranobeAdapter.setOnItemClickListener(new RanobeAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(Manga ranobe) {
                             // Обработайте нажатие кнопки для выбранного аниме
-                            Intent intent = new Intent(AnimeIDActivity.this, MangaIDActivity.class);
+                            Intent intent = new Intent(AnimeIDActivity.this, RanobeIDActivity.class);
 
                             intent.putExtra("Id", ranobe.getId());
                             startActivity(intent);
                         }
                     });
 
-                    relatedRanobeRecyclerView.setAdapter(mangaAdapter);
+                    relatedRanobeRecyclerView.setAdapter(ranobeAdapter);
                 }
             });
             animeIDViewModel.getsimilarLiveData().observe(this, new Observer<List<Anime>>() {
