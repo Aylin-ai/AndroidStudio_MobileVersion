@@ -44,6 +44,7 @@ public class MangaIDActivity extends AppCompatActivity {
     private TextView ChapterCountTextView;
     private TextView PublishersTextView;
     private TextView GenresTextView;
+    private TextView DescTextView;
     private RecyclerView relatedAnimeRecyclerView;
     private RecyclerView relatedMangaRecyclerView;
     private RecyclerView relatedRanobeRecyclerView;
@@ -65,6 +66,7 @@ public class MangaIDActivity extends AppCompatActivity {
         SimilarRecyclerView = findViewById(R.id.SimilarRecyclerView);
         SimilarRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
+        DescTextView = findViewById(R.id.DescTextView);
         GenresTextView = findViewById(R.id.GenresTextView);
         PublishersTextView = findViewById(R.id.PublishersTextView);
         Image = findViewById(R.id.Image);
@@ -100,6 +102,7 @@ public class MangaIDActivity extends AppCompatActivity {
                     KindTextView.setText(mangaIDViewModel.mangaID.getKind());
                     StatusTextView.setText(mangaIDViewModel.mangaID.getStatus());
                     ChapterCountTextView.setText(String.format("%d", mangaIDViewModel.mangaID.getChapters()));
+                    DescTextView.setText(mangaIDViewModel.mangaID.getDescription());
                 }
             });
 

@@ -40,6 +40,7 @@ public class RanobeIDActivity extends AppCompatActivity {
     private TextView ChapterCountTextView;
     private TextView PublishersTextView;
     private TextView GenresTextView;
+    private TextView DescTextView;
     private RecyclerView relatedAnimeRecyclerView;
     private RecyclerView relatedMangaRecyclerView;
     private RecyclerView relatedRanobeRecyclerView;
@@ -61,6 +62,7 @@ public class RanobeIDActivity extends AppCompatActivity {
         SimilarRecyclerView = findViewById(R.id.SimilarRecyclerView);
         SimilarRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
+        DescTextView = findViewById(R.id.DescTextView);
         GenresTextView = findViewById(R.id.GenresTextView);
         PublishersTextView = findViewById(R.id.PublishersTextView);
         Image = findViewById(R.id.Image);
@@ -96,6 +98,7 @@ public class RanobeIDActivity extends AppCompatActivity {
                     KindTextView.setText(ranobeIDViewModel.ranobeID.getKind());
                     StatusTextView.setText(ranobeIDViewModel.ranobeID.getStatus());
                     ChapterCountTextView.setText(String.format("%d", ranobeIDViewModel.ranobeID.getChapters()));
+                    DescTextView.setText(ranobeIDViewModel.ranobeID.getDescription());
                 }
             });
 

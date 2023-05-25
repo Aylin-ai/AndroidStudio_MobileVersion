@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import com.example.mobileversion.R;
 import com.example.mobileversion.ui.piece.mangaID.MangaIDActivity;
 import com.example.mobileversion.ui.piece.ranobeID.RanobeIDActivity;
 
+import java.util.Arrays;
 import java.util.List;
 
 import models.Anime;
@@ -25,12 +27,18 @@ import models.Genre;
 import models.Manga;
 import models.MangaAdapter;
 import models.RanobeAdapter;
+import models.ScreenAdapter;
+import models.Screenshots;
 import models.Studio;
+import models.Video;
+import models.VideoAdapter;
 
 public class AnimeIDActivity extends AppCompatActivity {
     private AnimeAdapter animeAdapter;
     private MangaAdapter mangaAdapter;
     private RanobeAdapter ranobeAdapter;
+    private ScreenAdapter screenAdapter;
+    private VideoAdapter videoAdapter;
 
     private long id = 1;
     private ImageView animeImage;
@@ -43,6 +51,7 @@ public class AnimeIDActivity extends AppCompatActivity {
     private TextView animeDurabilityTextView;
     private TextView animeStudiosTextView;
     private TextView animeGenresTextView;
+    private TextView DescTextView;
     private RecyclerView animeScreensRecyclerView;
     private RecyclerView animeVideosRecyclerView;
     private RecyclerView relatedAnimeRecyclerView;
@@ -70,6 +79,7 @@ public class AnimeIDActivity extends AppCompatActivity {
         SimilarRecyclerView = findViewById(R.id.SimilarRecyclerView);
         SimilarRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
+        DescTextView = findViewById(R.id.DescTextView);
         animeGenresTextView = findViewById(R.id.animeGenresTextView);
         animeStudiosTextView = findViewById(R.id.animeStudiosTextView);
         animeImage = findViewById(R.id.animeImage);
@@ -109,6 +119,20 @@ public class AnimeIDActivity extends AppCompatActivity {
                     animeStatusTextView.setText(animeIDViewModel.animeID.getStatus());
                     animeSeriesCountTextView.setText(String.format("%d", animeIDViewModel.animeID.getEpisodes()));
                     animeDurabilityTextView.setText(String.format("%d", animeIDViewModel.animeID.getDuration()));
+                    DescTextView.setText(animeIDViewModel.animeID.getDescription());
+
+                    videoAdapter = new VideoAdapter(Arrays.asList(animeID.getVideos()));
+
+                    videoAdapter.setOnItemClickListener(new VideoAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(Video video) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(video.getUrl());
+                            startActivity(intent);
+                        }
+                    });
+
+                    animeVideosRecyclerView.setAdapter(videoAdapter);
                 }
             });
 
@@ -189,6 +213,13 @@ public class AnimeIDActivity extends AppCompatActivity {
                     });
 
                     SimilarRecyclerView.setAdapter(animeAdapter);
+                }
+            });
+            animeIDViewModel.getScreensLiveData().observe(this, new Observer<List<Screenshots>>() {
+                @Override
+                public void onChanged(List<Screenshots> screenshotsList) {
+                    screenAdapter = new ScreenAdapter(screenshotsList);
+                    animeScreensRecyclerView.setAdapter(screenAdapter);
                 }
             });
         }
