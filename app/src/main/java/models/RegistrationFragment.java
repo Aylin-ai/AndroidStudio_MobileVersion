@@ -3,6 +3,7 @@ package models;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -41,8 +44,7 @@ public class RegistrationFragment extends Fragment {
         EditText userPassword1 = view.findViewById(R.id.userPassword1);
         EditText userPassword2 = view.findViewById(R.id.userPassword2);
         EditText userEmail = view.findViewById(R.id.userEmail);
-
-
+        EditText userName = view.findViewById(R.id.userName);
 
         Button registrationButton = view.findViewById(R.id.registrationButton);
         registrationButton.setOnClickListener(new View.OnClickListener() {
@@ -51,8 +53,9 @@ public class RegistrationFragment extends Fragment {
                 String Password1 = userPassword1.getText().toString();
                 String Password2 = userPassword2.getText().toString();
                 String Email = userEmail.getText().toString();
+                String Name = userName.getText().toString();
                 if (Password1.equals("") ||
-                Password2.equals("") || Email.equals("")){
+                Password2.equals("") || Email.equals("") || Name.equals("")){
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setTitle("Ошибка")
                             .setMessage("Введены не все значения");
@@ -69,23 +72,31 @@ public class RegistrationFragment extends Fragment {
                     return;
                 }
 
-                FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                mAuth.createUserWithEmailAndPassword(Email, Password1)
+                FirebaseAuth.getInstance().createUserWithEmailAndPassword(Email, Password1)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                Intent intent = new Intent(getContext(), AppShellActivity.class);
-                                startActivity(intent);
-                                Toast.makeText(getContext(), "Authentication successful.",
-                                        Toast.LENGTH_SHORT).show();
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                if (user != null) {
+                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                            .setDisplayName(Name)
+                                            .setPhotoUri(Uri.parse("https://firebasestorage.googleapis.com/v0/b/antrap-firebase.appspot.com/o/OldPif.jpg?alt=media&token=6b117022-e75e-4b3c-b859-937f89516f8b"))
+                                            .build();
+
+                                    user.updateProfile(profileUpdates)
+                                            .addOnCompleteListener(profileUpdateTask -> {
+                                                if (profileUpdateTask.isSuccessful()) {
+                                                    Intent intent = new Intent(getContext(), AppShellActivity.class);
+                                                    startActivity(intent);
+                                                    Toast.makeText(getContext(), "Регистрация прошла успешно.",
+                                                            Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                }
                             } else {
-                                // If sign in fails, display a message to the user.
-                                Toast.makeText(getContext(), "Authentication failed.",
+                                Toast.makeText(getContext(), "Ошибка.",
                                         Toast.LENGTH_SHORT).show();
                             }
                         });
-
-
-
             }
         });
 
