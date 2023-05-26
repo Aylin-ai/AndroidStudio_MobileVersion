@@ -76,7 +76,7 @@ public class RanobeFragment extends Fragment {
         ranobeViewModel.getListLiveData().observe(getViewLifecycleOwner(), new Observer<List<Manga>>() {
             @Override
             public void onChanged(List<Manga> ranobes) {
-                adapter = new RanobeAdapter(ranobes);
+                adapter = new RanobeAdapter(ranobes, getContext());
                 adapter.setOnItemClickListener(new RanobeAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(Manga manga) {

@@ -69,7 +69,7 @@ public class AnimeFragment extends Fragment {
             @Override
             public void onChanged(List<Anime> animeListData) {
                 // Обновляем адаптер с новыми данными
-                adapter = new AnimeAdapter(animeListData);
+                adapter = new AnimeAdapter(animeListData, getActivity());
 
                 adapter.setOnItemClickListener(new AnimeAdapter.OnItemClickListener() {
                     @Override

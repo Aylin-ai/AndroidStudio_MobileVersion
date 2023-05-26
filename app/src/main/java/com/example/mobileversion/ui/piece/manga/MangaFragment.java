@@ -72,7 +72,7 @@ public class MangaFragment extends Fragment {
         mangaViewModel.getListLiveData().observe(getViewLifecycleOwner(), new Observer<List<Manga>>() {
             @Override
             public void onChanged(List<Manga> mangas) {
-                adapter = new MangaAdapter(mangas);
+                adapter = new MangaAdapter(mangas, getContext());
 
                 adapter.setOnItemClickListener(new MangaAdapter.OnItemClickListener() {
                     @Override

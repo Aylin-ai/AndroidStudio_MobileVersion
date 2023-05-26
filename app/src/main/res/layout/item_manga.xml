@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5sp"
             android:layout_gravity="center"
-            android:entries="@array/spinner_anime_list"
+            android:entries="@array/spinner_manga_list"
             />
     </LinearLayout>
 
