@@ -34,7 +34,6 @@ public class AnimeViewModel extends ViewModel {
     private MutableLiveData<Genre[]> genreLiveData = new MutableLiveData<>();
     private MutableLiveData<String> messageLiveData = new MutableLiveData<>();
 
-    // Другие методы и поля вашего AnimeViewModel...
 
     public LiveData<List<Anime>> getAnimeListLiveData() {
         return animeListLiveData;
