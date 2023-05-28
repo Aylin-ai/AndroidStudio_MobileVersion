@@ -66,7 +66,7 @@ public class RanobeIDActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_manga_id);
+        setContentView(R.layout.activity_ranobe_id);
         RanobeIDViewModel ranobeIDViewModel =
                 new ViewModelProvider(this).get(RanobeIDViewModel.class);
 
@@ -92,7 +92,7 @@ public class RanobeIDActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             id = intent.getLongExtra("Id", 0);
-            ranobeIDViewModel.getRanobe((int) id);
+            ranobeIDViewModel.getRanobe(id);
             ranobeIDViewModel.getRanobeLiveData().observe(this, new Observer<MangaID>() {
                 @Override
                 public void onChanged(MangaID mangaID) {

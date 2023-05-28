@@ -72,7 +72,7 @@ public class RanobeIDViewModel extends ViewModel {
         similar = new ArrayList<>();
     }
 
-    public void getRanobe(int id){
+    public void getRanobe(long id){
         String animeUrl = BASE_URL + String.format(RANOBE_ENDPOINT_FORMAT, id);
         Request.Builder requestBuilder = new Request.Builder()
                 .url(animeUrl)
