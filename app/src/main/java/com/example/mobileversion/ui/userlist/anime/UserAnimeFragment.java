@@ -38,11 +38,11 @@ public class UserAnimeFragment extends Fragment {
     private AnimeAdapter animeAdapter;
     private FragmentUserAnimeBinding binding;
     private FloatingActionButton userListButton;
+    private UserAnimeViewModel userAnimeViewModel; // Сохраняем экземпляр ViewModel
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        UserAnimeViewModel userAnimeViewModel =
-                new ViewModelProvider(this).get(UserAnimeViewModel.class);
+        userAnimeViewModel = new ViewModelProvider(this).get(UserAnimeViewModel.class); // Инициализируем ViewModel
 
         binding = FragmentUserAnimeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -56,7 +56,6 @@ public class UserAnimeFragment extends Fragment {
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Выберите опцию");
-
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
                         android.R.layout.simple_spinner_dropdown_item,
@@ -74,53 +73,37 @@ public class UserAnimeFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         String selectedOption = (String) spinner.getSelectedItem();
                         userAnimeViewModel.loadAnimeFromDatabase(selectedOption);
-                        userAnimeViewModel.getPiecesListLiveData().
-                                observe(getViewLifecycleOwner(), new Observer<List<PieceInUserList>>() {
-                            @Override
-                            public void onChanged(List<PieceInUserList> pieceInUserLists) {
-                                userAnimeViewModel.getAnimes(pieceInUserLists);
-                                userAnimeViewModel.getAnimeListLiveData()
-                                        .observe(getViewLifecycleOwner(), new Observer<List<AnimeID>>() {
-                                            @Override
-                                            public void onChanged(List<AnimeID> animeIDS) {
-                                                List<Anime> animeList = new ArrayList<>();
-                                                for (AnimeID animeID: animeIDS) {
-                                                    Anime anime = new Anime();
-                                                    anime.setId(animeID.getId());
-                                                    anime.setImage(animeID.getImage());
-                                                    anime.setKind(animeID.getKind());
-                                                    anime.setName(animeID.getName());
-                                                    anime.setRussian(animeID.getRussian());
-                                                    anime.setEpisodes(animeID.getEpisodes());
-                                                    anime.setEpisodesAired(animeID.getEpisodesAired());
-                                                    anime.setAiredOn(animeID.getAiredOn());
-                                                    anime.setScore(animeID.getScore());
-                                                    anime.setStatus(animeID.getStatus());
-                                                    anime.setReleasedOn(animeID.getReleasedOn());
-                                                    animeList.add(anime);
-                                                }
-                                                animeAdapter = new AnimeAdapter(animeList, getActivity());
-                                                animeAdapter.setOnItemClickListener(new AnimeAdapter.OnItemClickListener() {
-                                                    @Override
-                                                    public void onItemClick(Anime anime) {
-                                                        // Обработайте нажатие кнопки для выбранного аниме
-                                                        Intent intent = new Intent(getActivity(), AnimeIDActivity.class);
-
-                                                        intent.putExtra("Id", anime.getId());
-                                                        startActivity(intent);
-                                                    }
-                                                });
-                                                userAnimeList.setAdapter(animeAdapter);
-                                            }
-                                        });
-                            }
-                        });
                     }
                 });
                 builder.setNegativeButton("Отмена", null);
 
                 // Отображение диалогового окна
                 builder.show();
+            }
+        });
+
+        // Наблюдаем за изменениями в LiveData animeListLiveData
+        userAnimeViewModel.getAnimeListLiveData().observe(getViewLifecycleOwner(), new Observer<List<Anime>>() {
+            @Override
+            public void onChanged(List<Anime> animeList) {
+                if (animeList == null || animeList.isEmpty()) {
+                    // Список аниме пуст или равен null, скрываем RecyclerView
+                    userAnimeList.setVisibility(View.GONE);
+                } else {
+                    animeAdapter = new AnimeAdapter(animeList, getActivity());
+                    animeAdapter.setOnItemClickListener(new AnimeAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(Anime anime) {
+                            // Обработайте нажатие кнопки для выбранного аниме
+                            Intent intent = new Intent(getActivity(), AnimeIDActivity.class);
+                            intent.putExtra("Id", anime.getId());
+                            startActivity(intent);
+                        }
+                    });
+                    userAnimeList.setAdapter(animeAdapter);
+                    // Показываем RecyclerView
+                    userAnimeList.setVisibility(View.VISIBLE);
+                }
             }
         });
 

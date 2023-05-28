@@ -41,12 +41,12 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class UserAnimeViewModel extends ViewModel {
-    private MutableLiveData<List<AnimeID>> animeListLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<Anime>> animeListLiveData = new MutableLiveData<>();
     private MutableLiveData<String> messageLiveData = new MutableLiveData<>();
     private MutableLiveData<List<PieceInUserList>> piecesListLiveData = new MutableLiveData<>();
 
 
-    public LiveData<List<AnimeID>> getAnimeListLiveData() {
+    public LiveData<List<Anime>> getAnimeListLiveData() {
         return animeListLiveData;
     }
     public LiveData<String> getMessageLiveData() {
@@ -82,6 +82,7 @@ public class UserAnimeViewModel extends ViewModel {
                     }
                 }
                 piecesListLiveData.postValue(pieces);
+                getAnimes(pieces);
             }
 
             @Override
@@ -92,10 +93,10 @@ public class UserAnimeViewModel extends ViewModel {
     }
     public void getAnimes(List<PieceInUserList> pieceList) {
         try {
-            if (pieceList != null) {
+            if (pieceList.size() != 0) {
                 int totalPieces = pieceList.size();
                 AtomicInteger loadedPieces = new AtomicInteger(0);
-                List<AnimeID> animeList = new ArrayList<>();
+                List<Anime> animeList = new ArrayList<>();
 
                 for (PieceInUserList piece : pieceList) {
                     String apiUrl = String.format("/api/animes/%d", piece.getPieceId());
@@ -112,11 +113,11 @@ public class UserAnimeViewModel extends ViewModel {
                                 Gson gson = new GsonBuilder()
                                         .registerTypeAdapter(Uri.class, new UriTypeAdapter())
                                         .create();
-                                Type animeId = new TypeToken<AnimeID>() {}.getType();
-                                AnimeID animeID = gson.fromJson(response.body().string(), animeId);
-                                animeID.getImage().setOriginal("https://shikimori.me" + animeID.getImage().getOriginal());
-                                animeID.getImage().setPreview("https://shikimori.me" + animeID.getImage().getPreview());
-                                animeList.add(animeID);
+                                Type animeType = new TypeToken<Anime>() {}.getType();
+                                Anime anime = gson.fromJson(response.body().string(), animeType);
+                                anime.getImage().setOriginal("https://shikimori.me" + anime.getImage().getOriginal());
+                                anime.getImage().setPreview("https://shikimori.me" + anime.getImage().getPreview());
+                                animeList.add(anime);
                             } else {
                                 // Обновляем сообщение об ошибке
                                 messageLiveData.postValue("Failure");
@@ -142,6 +143,8 @@ public class UserAnimeViewModel extends ViewModel {
                         }
                     });
                 }
+            } else {
+                animeListLiveData.postValue(new ArrayList<>());
             }
         } catch (Exception e) {
             Log.e("AnimeManager", e.getMessage());
