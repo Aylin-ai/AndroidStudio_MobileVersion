@@ -160,7 +160,9 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> 
     }
     private void deletePieceFromDatabase(Manga manga) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference animeRef = database.getReference("manga").child(String.valueOf(manga.getId()));
+        DatabaseReference animeRef = database.getReference("manga")
+                .child(String.format("%d %s", manga.getId(),
+                        user.getEmail().replace('.', ',')));
         animeRef.removeValue()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -181,7 +183,9 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         // Получите ссылку на узел, где хранятся данные для аниме
-        DatabaseReference animeRef = database.getReference("manga").child(String.valueOf(piece.getPieceId()));
+        DatabaseReference animeRef = database.getReference("manga")
+                .child(String.format("%d %s", piece.getPieceId(),
+                        user.getEmail().replace('.', ',')));
 
         // Обновите значение списка в базе данных
         piece.setUserList(selectedValue);
@@ -211,7 +215,9 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         // Получите ссылку на узел, где хранятся данные для аниме
-        DatabaseReference animeRef = database.getReference("manga").child(String.valueOf(manga.getId()));
+        DatabaseReference animeRef = database.getReference("manga")
+                .child(String.format("%d %s", manga.getId(),
+                        user.getEmail().replace('.', ',')));
 
         // Добавьте данные аниме в базу данных
         animeRef.setValue(piece)

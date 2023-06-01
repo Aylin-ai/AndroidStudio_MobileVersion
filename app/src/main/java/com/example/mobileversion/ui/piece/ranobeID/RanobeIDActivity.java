@@ -251,7 +251,12 @@ public class RanobeIDActivity extends AppCompatActivity {
     }
     public void loadRanobeFromDatabase(long id, PieceRepository.PieceDataLoadCallback callback) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("ranobe").child(String.valueOf(id));
+        DatabaseReference myRef = database.getReference("ranobe")
+                .child(String.format("%d %s", id,
+                        FirebaseAuth.getInstance()
+                                .getCurrentUser()
+                                .getEmail()
+                                .replace('.', ',')));
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -267,7 +272,12 @@ public class RanobeIDActivity extends AppCompatActivity {
     }
     private void deletePieceFromDatabase(MangaID ranobe) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference animeRef = database.getReference("ranobe").child(String.valueOf(ranobe.getId()));
+        DatabaseReference animeRef = database.getReference("ranobe")
+                .child(String.format("%d %s", ranobe.getId(),
+                        FirebaseAuth.getInstance()
+                                .getCurrentUser()
+                                .getEmail()
+                                .replace('.', ',')));
         animeRef.removeValue()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -288,7 +298,12 @@ public class RanobeIDActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         // Получите ссылку на узел, где хранятся данные для аниме
-        DatabaseReference animeRef = database.getReference("ranobe").child(String.valueOf(piece.getPieceId()));
+        DatabaseReference animeRef = database.getReference("ranobe")
+                .child(String.format("%d %s", piece.getPieceId(),
+                        FirebaseAuth.getInstance()
+                                .getCurrentUser()
+                                .getEmail()
+                                .replace('.', ',')));
 
         // Обновите значение списка в базе данных
         piece.setUserList(selectedValue);
@@ -319,7 +334,12 @@ public class RanobeIDActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         // Получите ссылку на узел, где хранятся данные для аниме
-        DatabaseReference animeRef = database.getReference("ranobe").child(String.valueOf(ranobe.getId()));
+        DatabaseReference animeRef = database.getReference("ranobe")
+                .child(String.format("%d %s", ranobe.getId(),
+                        FirebaseAuth.getInstance()
+                                .getCurrentUser()
+                                .getEmail()
+                                .replace('.', ',')));
 
         // Добавьте данные аниме в базу данных
         animeRef.setValue(piece)

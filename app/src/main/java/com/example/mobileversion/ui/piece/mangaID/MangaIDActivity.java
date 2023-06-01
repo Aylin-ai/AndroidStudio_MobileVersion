@@ -253,7 +253,12 @@ public class MangaIDActivity extends AppCompatActivity {
     }
     public void loadMangaFromDatabase(long id, PieceRepository.PieceDataLoadCallback callback) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("manga").child(String.valueOf(id));
+        DatabaseReference myRef = database.getReference("manga")
+                .child(String.format("%d %s", id,
+                        FirebaseAuth.getInstance()
+                                .getCurrentUser()
+                                .getEmail()
+                                .replace('.', ',')));
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -269,7 +274,12 @@ public class MangaIDActivity extends AppCompatActivity {
     }
     private void deletePieceFromDatabase(MangaID manga) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference animeRef = database.getReference("manga").child(String.valueOf(manga.getId()));
+        DatabaseReference animeRef = database.getReference("manga")
+                .child(String.format("%d %s", manga.getId(),
+                        FirebaseAuth.getInstance()
+                                .getCurrentUser()
+                                .getEmail()
+                                .replace('.', ',')));
         animeRef.removeValue()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -290,7 +300,12 @@ public class MangaIDActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         // Получите ссылку на узел, где хранятся данные для аниме
-        DatabaseReference animeRef = database.getReference("manga").child(String.valueOf(piece.getPieceId()));
+        DatabaseReference animeRef = database.getReference("manga")
+                .child(String.format("%d %s", piece.getPieceId(),
+                        FirebaseAuth.getInstance()
+                                .getCurrentUser()
+                                .getEmail()
+                                .replace('.', ',')));
 
         // Обновите значение списка в базе данных
         piece.setUserList(selectedValue);
@@ -321,7 +336,12 @@ public class MangaIDActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         // Получите ссылку на узел, где хранятся данные для аниме
-        DatabaseReference animeRef = database.getReference("manga").child(String.valueOf(manga.getId()));
+        DatabaseReference animeRef = database.getReference("manga")
+                .child(String.format("%d %s", manga.getId(),
+                        FirebaseAuth.getInstance()
+                                .getCurrentUser()
+                                .getEmail()
+                                .replace('.', ',')));
 
         // Добавьте данные аниме в базу данных
         animeRef.setValue(piece)

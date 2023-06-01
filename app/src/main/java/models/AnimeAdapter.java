@@ -180,7 +180,9 @@ public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         // Получите ссылку на узел, где хранятся данные для аниме
-        DatabaseReference animeRef = database.getReference("anime").child(String.valueOf(anime.getId()));
+        DatabaseReference animeRef = database.getReference("anime")
+                .child(String.format("%d %s", anime.getId(),
+                        user.getEmail().replace('.', ',')));
 
         // Удалите данные аниме из базы данных
         animeRef.removeValue()
@@ -203,7 +205,9 @@ public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         // Получите ссылку на узел, где хранятся данные для аниме
-        DatabaseReference animeRef = database.getReference("anime").child(String.valueOf(piece.getPieceId()));
+        DatabaseReference animeRef = database.getReference("anime")
+                .child(String.format("%d %s", piece.getPieceId(),
+                        user.getEmail().replace('.', ',')));
 
         // Обновите значение списка в базе данных
         piece.setUserList(selectedValue);
@@ -233,7 +237,9 @@ public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         // Получите ссылку на узел, где хранятся данные для аниме
-        DatabaseReference animeRef = database.getReference("anime").child(String.valueOf(anime.getId()));
+        DatabaseReference animeRef = database.getReference("anime")
+                .child(String.format("%d %s", anime.getId(),
+                        user.getEmail().replace('.', ',')));
 
         // Добавьте данные аниме в базу данных
         animeRef.setValue(piece)
