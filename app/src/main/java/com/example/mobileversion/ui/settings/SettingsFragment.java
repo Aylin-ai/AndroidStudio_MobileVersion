@@ -27,11 +27,23 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import models.PieceInUserList;
+import models.User;
 
 public class SettingsFragment extends Fragment {
     private FragmentSettingsBinding binding;
     private ImageView userImageView;
     private TextView userNameTextView;
+    private TextView userRoleTextView;
     private TextView userEmailTextView;
     private EditText userNewNameEditText;
     private EditText userNewPassword1EditText;
@@ -53,11 +65,31 @@ public class SettingsFragment extends Fragment {
         userNewPassword2EditText = binding.userNewPassword2EditText;
         userSubmitButton = binding.userSubmitButton;
         userDeleteAccButton = binding.userDeleteAccButton;
+        userRoleTextView = binding.userRoleTextView;
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String name = user.getDisplayName();
-        String email = user.getEmail();
-        Uri photo = user.getPhotoUrl();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users");
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                    User user = childSnapshot.getValue(User.class);
+                    if (user.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
+                        userRoleTextView.setText(user.getRole());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                String message = error.getMessage();
+            }
+        });
+
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        String name = firebaseUser.getDisplayName();
+        String email = firebaseUser.getEmail();
+        Uri photo = firebaseUser.getPhotoUrl();
 
         Glide.with(this)
                 .load(photo)
@@ -73,14 +105,14 @@ public class SettingsFragment extends Fragment {
                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                 .setDisplayName(userNewNameEditText.getText().toString())
                                 .build();
-                        user.updateProfile(profileUpdates)
+                        firebaseUser.updateProfile(profileUpdates)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
                                             Toast.makeText(getContext(), "Имя изменено успешно.",
                                                     Toast.LENGTH_SHORT).show();
-                                            userNameTextView.setText(user.getDisplayName());
+                                            userNameTextView.setText(firebaseUser.getDisplayName());
                                         }
                                     }
                                 });
@@ -89,7 +121,7 @@ public class SettingsFragment extends Fragment {
                             userNewPassword2EditText.getText().toString().equals(""))) {
                         if (userNewPassword1EditText.getText().toString()
                                 .equals(userNewPassword2EditText.getText().toString())) {
-                            user.updatePassword(userNewPassword1EditText.getText().toString())
+                            firebaseUser.updatePassword(userNewPassword1EditText.getText().toString())
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {

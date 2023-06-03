@@ -20,11 +20,15 @@ import com.example.mobileversion.AppShellActivity;
 import com.example.mobileversion.MainActivity;
 import com.example.mobileversion.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -89,6 +93,35 @@ public class RegistrationFragment extends Fragment {
                                                     startActivity(intent);
                                                     Toast.makeText(getContext(), "Регистрация прошла успешно.",
                                                             Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+                                    User newUser = new User();
+                                    newUser.setEmail(user.getEmail());
+                                    newUser.setId(user.getUid());
+                                    newUser.setImageSource("https://firebasestorage.googleapis.com/v0/b/antrap-firebase.appspot.com/o/OldPif.jpg?alt=media&token=6b117022-e75e-4b3c-b859-937f89516f8b");
+                                    newUser.setLogin(Name);
+                                    newUser.setRole("Пользователь");
+
+                                    // Получите ссылку на узел, где хранятся данные для аниме
+                                    DatabaseReference animeRef = database.getReference("users")
+                                            .child(String.format("%s",
+                                                    user.getEmail()
+                                                            .replace('.', ',')));
+
+                                    // Добавьте данные аниме в базу данных
+                                    animeRef.setValue(newUser)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    // Успешно добавлено в базу данных
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // Обработка ошибки при добавлении в базу данных
                                                 }
                                             });
                                 }
