@@ -81,7 +81,7 @@ public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> 
     }
     private PieceInUserList findPieceForAnime(Anime anime) {
         for (PieceInUserList piece : pieces) {
-            if (piece.getPieceId() == anime.getId()) {
+            if (piece.getPieceId() == anime.getId() && Objects.equals(piece.getUserEmail(), user.getEmail())) {
                 return piece;
             }
         }

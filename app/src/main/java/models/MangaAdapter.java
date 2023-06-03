@@ -25,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> {
     public interface OnItemClickListener {
@@ -64,7 +65,7 @@ public class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> 
     }
     private PieceInUserList findPieceForManga(Manga manga) {
         for (PieceInUserList piece : pieces) {
-            if (piece.getPieceId() == manga.getId()) {
+            if (piece.getPieceId() == manga.getId() && Objects.equals(piece.getUserEmail(), user.getEmail())) {
                 return piece;
             }
         }

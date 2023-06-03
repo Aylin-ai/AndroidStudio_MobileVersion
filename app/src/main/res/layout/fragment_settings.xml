@@ -61,8 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/userDeleteAccButton"
-            android:text="Удалить аккаунт"
-            android:background="@color/red"/>
+            android:text="Удалить аккаунт" />
 
     </LinearLayout>
 

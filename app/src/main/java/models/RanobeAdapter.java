@@ -25,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class RanobeAdapter extends RecyclerView.Adapter<RanobeAdapter.ViewHolder> {
     public interface OnItemClickListener {
@@ -75,7 +76,7 @@ public class RanobeAdapter extends RecyclerView.Adapter<RanobeAdapter.ViewHolder
     }
     private PieceInUserList findPieceForRanobe(Manga ranobe) {
         for (PieceInUserList piece : pieces) {
-            if (piece.getPieceId() == ranobe.getId()) {
+            if (piece.getPieceId() == ranobe.getId() && Objects.equals(piece.getUserEmail(), user.getEmail())) {
                 return piece;
             }
         }

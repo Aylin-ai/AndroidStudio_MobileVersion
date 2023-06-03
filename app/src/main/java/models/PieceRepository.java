@@ -26,7 +26,9 @@ public class PieceRepository {
 
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                     PieceInUserList piece = childSnapshot.getValue(PieceInUserList.class);
-                    pieces.add(piece);
+                    if (piece.getUserEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
+                        pieces.add(piece);
+                    }
                 }
 
                 callback.onDataLoaded(pieces);
@@ -48,7 +50,9 @@ public class PieceRepository {
 
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                     PieceInUserList piece = childSnapshot.getValue(PieceInUserList.class);
-                    pieces.add(piece);
+                    if (piece.getUserEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
+                        pieces.add(piece);
+                    }
                 }
 
                 callback.onDataLoaded(pieces);
@@ -70,7 +74,9 @@ public class PieceRepository {
 
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                     PieceInUserList piece = childSnapshot.getValue(PieceInUserList.class);
-                    pieces.add(piece);
+                    if (piece.getUserEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
+                        pieces.add(piece);
+                    }
                 }
 
                 callback.onDataLoaded(pieces);
