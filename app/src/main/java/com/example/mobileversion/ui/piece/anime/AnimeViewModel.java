@@ -30,9 +30,9 @@ import okhttp3.Response;
 
 public class AnimeViewModel extends ViewModel {
 
-    private MutableLiveData<List<Anime>> animeListLiveData = new MutableLiveData<>();
-    private MutableLiveData<Genre[]> genreLiveData = new MutableLiveData<>();
-    private MutableLiveData<String> messageLiveData = new MutableLiveData<>();
+    public MutableLiveData<List<Anime>> animeListLiveData = new MutableLiveData<>();
+    public MutableLiveData<Genre[]> genreLiveData = new MutableLiveData<>();
+    public MutableLiveData<String> messageLiveData = new MutableLiveData<>();
 
 
     public LiveData<List<Anime>> getAnimeListLiveData() {
@@ -47,7 +47,7 @@ public class AnimeViewModel extends ViewModel {
         return messageLiveData;
     }
 
-    private OkHttpClient httpClient;
+    public OkHttpClient httpClient;
     public List<Anime> animeList;
     public Genre[] animeGenres;
     private String message;

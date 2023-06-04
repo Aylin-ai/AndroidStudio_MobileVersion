@@ -40,7 +40,7 @@ public class AnimeIDViewModel extends ViewModel {
     private static final String RELATED_ENDPOINT_FORMAT = "/api/animes/%s/related";
     private static final String SIMILAR_ENDPOINT_FORMAT = "/api/animes/%s/similar";
 
-    private OkHttpClient httpClient;
+    public OkHttpClient httpClient;
 
     public AnimeID animeID;
     public List<Screenshots> screens;

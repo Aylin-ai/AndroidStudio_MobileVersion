@@ -19,9 +19,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -30,9 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import models.Anime;
 import models.AnimeID;
-import models.Genre;
 import models.PieceInUserList;
-import models.PieceRepository;
 import models.UriTypeAdapter;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -54,7 +49,7 @@ public class UserAnimeViewModel extends ViewModel {
     }
     public LiveData<List<PieceInUserList>> getPiecesListLiveData() { return piecesListLiveData; }
 
-    private OkHttpClient httpClient;
+    public OkHttpClient httpClient;
     public List<AnimeID> animeList;
     public List<PieceInUserList> pieceList;
     private String message;
