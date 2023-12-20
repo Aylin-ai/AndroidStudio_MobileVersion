@@ -78,7 +78,7 @@ public class MangaViewModel extends ViewModel {
 
     public void getManga(int page, String order, String type, String status, long genre) {
         Request.Builder requestBuilder = new Request.Builder()
-                .url("https://shikimori.me/api/genres")
+                .url("https://shikimori.one/api/genres")
                 .header("Authorization", "User-Agent ShikiOAuthTest");
         Request request = requestBuilder.build();
 
@@ -113,7 +113,7 @@ public class MangaViewModel extends ViewModel {
             apiUrl = String.format("/api/mangas?limit=50&order=%s&page=%d&kind=%s&status=%s&genre=%d", order, page, type, status, genre);
         }
         request = new Request.Builder()
-                .url("https://shikimori.me" + apiUrl)
+                .url("https://shikimori.one" + apiUrl)
                 .header("Authorization", "User-Agent ShikiOAuthTest")
                 .build();
 
@@ -132,7 +132,7 @@ public class MangaViewModel extends ViewModel {
                     Gson gson = new Gson();
                     list = gson.fromJson(jsonArray.toString(), listType);
                     for (Manga manga : list) {
-                        manga.getImage().setOriginal("https://shikimori.me" + manga.getImage().getOriginal());
+                        manga.getImage().setOriginal("https://shikimori.one" + manga.getImage().getOriginal());
                     }
                     // Обновляем значение LiveData с списком аниме
                     listLiveData.postValue(list);
@@ -159,7 +159,7 @@ public class MangaViewModel extends ViewModel {
                 String apiUrl = String.format("/api/mangas?search=%s&limit=50", search);
 
                 Request.Builder requestBuilder = new Request.Builder()
-                        .url("https://shikimori.me" + apiUrl)
+                        .url("https://shikimori.one" + apiUrl)
                         .header("Authorization", "User-Agent ShikiOAuthTest");
                 Request request = requestBuilder.build();
 
@@ -177,7 +177,7 @@ public class MangaViewModel extends ViewModel {
                             Gson gson = new Gson();
                             list = gson.fromJson(jsonArray.toString(), listType);
                             for (Manga manga : list) {
-                                manga.getImage().setOriginal("https://shikimori.me" + manga.getImage().getOriginal());
+                                manga.getImage().setOriginal("https://shikimori.one" + manga.getImage().getOriginal());
                             }
                             // Обновляем значение LiveData с списком аниме
                             listLiveData.postValue(list);

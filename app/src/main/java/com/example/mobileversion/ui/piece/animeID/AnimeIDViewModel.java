@@ -33,7 +33,7 @@ import okhttp3.Response;
 
 public class AnimeIDViewModel extends ViewModel {
 
-    private static final String BASE_URL = "https://shikimori.me";
+    private static final String BASE_URL = "https://shikimori.one";
     private static final String USER_AGENT = "ShikiOAuthTest";
     private static final String ANIME_ENDPOINT_FORMAT = "/api/animes/%s";
     private static final String SCREENSHOTS_ENDPOINT_FORMAT = "/api/animes/%s/screenshots";
@@ -215,7 +215,7 @@ public class AnimeIDViewModel extends ViewModel {
                             .create();
                     similar = gson.fromJson(similarJsonArray.toString(), listType);
                     for (Anime anime : similar) {
-                        anime.getImage().setOriginal("https://shikimori.me" + anime.getImage().getOriginal());
+                        anime.getImage().setOriginal("https://shikimori.one" + anime.getImage().getOriginal());
                     }
                     similarLiveData.postValue(similar);
                 }

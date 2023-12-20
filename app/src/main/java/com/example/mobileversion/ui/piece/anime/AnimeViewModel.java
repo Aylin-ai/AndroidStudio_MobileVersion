@@ -79,7 +79,7 @@ public class AnimeViewModel extends ViewModel {
 
     public void getAnimes(int page, String order, String type, String status, long genre) {
         Request.Builder requestBuilder = new Request.Builder()
-                .url("https://shikimori.me/api/genres")
+                .url("https://shikimori.one/api/genres")
                 .header("Authorization", "User-Agent ShikiOAuthTest");
         Request request = requestBuilder.build();
 
@@ -114,7 +114,7 @@ public class AnimeViewModel extends ViewModel {
             apiUrl = String.format("/api/animes?limit=50&order=%s&page=%d&kind=%s&status=%s&genre=%d", order, page, type, status, genre);
         }
         request = new Request.Builder()
-                .url("https://shikimori.me" + apiUrl)
+                .url("https://shikimori.one" + apiUrl)
                 .header("Authorization", "User-Agent ShikiOAuthTest")
                 .build();
 
@@ -133,7 +133,7 @@ public class AnimeViewModel extends ViewModel {
                     Gson gson = new Gson();
                     animeList = gson.fromJson(animeJsonArray.toString(), listType);
                     for (Anime anime : animeList) {
-                        anime.getImage().setOriginal("https://shikimori.me" + anime.getImage().getOriginal());
+                        anime.getImage().setOriginal("https://shikimori.one" + anime.getImage().getOriginal());
                     }
                     // Обновляем значение LiveData с списком аниме
                     animeListLiveData.postValue(animeList);
@@ -160,7 +160,7 @@ public class AnimeViewModel extends ViewModel {
                 String apiUrl = String.format("/api/animes?search=%s&limit=50", searchAnime);
 
                 Request.Builder requestBuilder = new Request.Builder()
-                        .url("https://shikimori.me" + apiUrl)
+                        .url("https://shikimori.one" + apiUrl)
                         .header("Authorization", "User-Agent ShikiOAuthTest");
                 Request request = requestBuilder.build();
 

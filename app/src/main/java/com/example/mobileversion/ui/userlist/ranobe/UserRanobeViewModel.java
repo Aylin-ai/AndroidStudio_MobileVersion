@@ -85,7 +85,7 @@ public class UserRanobeViewModel extends ViewModel {
                     String apiUrl = String.format("/api/ranobe/%d", piece.getPieceId());
 
                     Request.Builder requestBuilder = new Request.Builder()
-                            .url("https://shikimori.me" + apiUrl)
+                            .url("https://shikimori.one" + apiUrl)
                             .header("Authorization", "User-Agent ShikiOAuthTest");
                     Request request = requestBuilder.build();
 
@@ -99,8 +99,8 @@ public class UserRanobeViewModel extends ViewModel {
                                         .create();
                                 Type animeType = new TypeToken<Manga>() {}.getType();
                                 Manga ranobe = gson.fromJson(response.body().string(), animeType);
-                                ranobe.getImage().setOriginal("https://shikimori.me" + ranobe.getImage().getOriginal());
-                                ranobe.getImage().setPreview("https://shikimori.me" + ranobe.getImage().getPreview());
+                                ranobe.getImage().setOriginal("https://shikimori.one" + ranobe.getImage().getOriginal());
+                                ranobe.getImage().setPreview("https://shikimori.one" + ranobe.getImage().getPreview());
                                 ranobeList.add(ranobe);
                             } else {
                                 // Обновляем сообщение об ошибке

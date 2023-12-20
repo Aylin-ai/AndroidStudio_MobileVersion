@@ -34,7 +34,7 @@ import okhttp3.Response;
 
 public class MangaIDViewModel extends ViewModel {
 
-    private static final String BASE_URL = "https://shikimori.me";
+    private static final String BASE_URL = "https://shikimori.one";
     private static final String USER_AGENT = "ShikiOAuthTest";
     private static final String MANGA_ENDPOINT_FORMAT = "/api/mangas/%s";
     private static final String RELATED_ENDPOINT_FORMAT = "/api/mangas/%s/related";
@@ -178,7 +178,7 @@ public class MangaIDViewModel extends ViewModel {
                             .create();
                     List<Manga> similarList = gson.fromJson(similarJsonArray.toString(), listType);
                     for (Manga manga : similarList) {
-                        manga.getImage().setOriginal("https://shikimori.me" + manga.getImage().getOriginal());
+                        manga.getImage().setOriginal("https://shikimori.one" + manga.getImage().getOriginal());
                         if (!(manga.getKind().equals("light_novel") || manga.getKind().equals("novel"))) {
                             similar.add(manga);
                         }

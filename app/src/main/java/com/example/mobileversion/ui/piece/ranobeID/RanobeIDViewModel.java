@@ -33,7 +33,7 @@ import okhttp3.Response;
 
 public class RanobeIDViewModel extends ViewModel {
 
-    private static final String BASE_URL = "https://shikimori.me";
+    private static final String BASE_URL = "https://shikimori.one";
     private static final String USER_AGENT = "ShikiOAuthTest";
     private static final String RANOBE_ENDPOINT_FORMAT = "/api/ranobe/%s";
     private static final String RELATED_ENDPOINT_FORMAT = "/api/ranobe/%s/related";
@@ -177,7 +177,7 @@ public class RanobeIDViewModel extends ViewModel {
                             .create();
                     List<Manga> similarList = gson.fromJson(similarJsonArray.toString(), listType);
                     for (Manga ranobe : similarList) {
-                        ranobe.getImage().setOriginal("https://shikimori.me" + ranobe.getImage().getOriginal());
+                        ranobe.getImage().setOriginal("https://shikimori.one" + ranobe.getImage().getOriginal());
                         if (ranobe.getKind().equals("light_novel") || ranobe.getKind().equals("novel")) {
                             similar.add(ranobe);
                         }

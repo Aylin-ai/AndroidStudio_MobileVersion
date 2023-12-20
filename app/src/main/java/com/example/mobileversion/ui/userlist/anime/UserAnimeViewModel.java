@@ -97,7 +97,7 @@ public class UserAnimeViewModel extends ViewModel {
                     String apiUrl = String.format("/api/animes/%d", piece.getPieceId());
 
                     Request.Builder requestBuilder = new Request.Builder()
-                            .url("https://shikimori.me" + apiUrl)
+                            .url("https://shikimori.one" + apiUrl)
                             .header("Authorization", "User-Agent ShikiOAuthTest");
                     Request request = requestBuilder.build();
 
@@ -110,8 +110,8 @@ public class UserAnimeViewModel extends ViewModel {
                                         .create();
                                 Type animeType = new TypeToken<Anime>() {}.getType();
                                 Anime anime = gson.fromJson(response.body().string(), animeType);
-                                anime.getImage().setOriginal("https://shikimori.me" + anime.getImage().getOriginal());
-                                anime.getImage().setPreview("https://shikimori.me" + anime.getImage().getPreview());
+                                anime.getImage().setOriginal("https://shikimori.one" + anime.getImage().getOriginal());
+                                anime.getImage().setPreview("https://shikimori.one" + anime.getImage().getPreview());
                                 animeList.add(anime);
                             } else {
                                 // Обновляем сообщение об ошибке

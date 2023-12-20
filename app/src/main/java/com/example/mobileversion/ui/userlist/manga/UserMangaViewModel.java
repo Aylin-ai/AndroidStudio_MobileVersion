@@ -87,7 +87,7 @@ public class UserMangaViewModel extends ViewModel {
                     String apiUrl = String.format("/api/mangas/%d", piece.getPieceId());
 
                     Request.Builder requestBuilder = new Request.Builder()
-                            .url("https://shikimori.me" + apiUrl)
+                            .url("https://shikimori.one" + apiUrl)
                             .header("Authorization", "User-Agent ShikiOAuthTest");
                     Request request = requestBuilder.build();
 
@@ -101,8 +101,8 @@ public class UserMangaViewModel extends ViewModel {
                                         .create();
                                 Type animeType = new TypeToken<Manga>() {}.getType();
                                 Manga manga = gson.fromJson(response.body().string(), animeType);
-                                manga.getImage().setOriginal("https://shikimori.me" + manga.getImage().getOriginal());
-                                manga.getImage().setPreview("https://shikimori.me" + manga.getImage().getPreview());
+                                manga.getImage().setOriginal("https://shikimori.one" + manga.getImage().getOriginal());
+                                manga.getImage().setPreview("https://shikimori.one" + manga.getImage().getPreview());
                                 mangaList.add(manga);
                             } else {
                                 // Обновляем сообщение об ошибке

@@ -74,7 +74,7 @@ public class RanobeViewModel extends ViewModel {
 
     public void getRanobe(int page, String order, String status, long genre) {
         Request.Builder requestBuilder = new Request.Builder()
-                .url("https://shikimori.me/api/genres")
+                .url("https://shikimori.one/api/genres")
                 .header("Authorization", "User-Agent ShikiOAuthTest");
         Request request = requestBuilder.build();
 
@@ -109,7 +109,7 @@ public class RanobeViewModel extends ViewModel {
             apiUrl = String.format("/api/ranobe?limit=50&order=%s&page=%d&status=%s&genre=%d", order, page, status, genre);
         }
         request = new Request.Builder()
-                .url("https://shikimori.me" + apiUrl)
+                .url("https://shikimori.one" + apiUrl)
                 .header("Authorization", "User-Agent ShikiOAuthTest")
                 .build();
 
@@ -127,7 +127,7 @@ public class RanobeViewModel extends ViewModel {
                     Gson gson = new Gson();
                     list = gson.fromJson(jsonArray.toString(), listType);
                     for (Manga ranobe : list) {
-                        ranobe.getImage().setOriginal("https://shikimori.me" + ranobe.getImage().getOriginal());
+                        ranobe.getImage().setOriginal("https://shikimori.one" + ranobe.getImage().getOriginal());
                     }
                     // Обновляем значение LiveData с списком аниме
                     listLiveData.postValue(list);
@@ -154,7 +154,7 @@ public class RanobeViewModel extends ViewModel {
                 String apiUrl = String.format("/api/ranobe?search=%s&limit=50", search);
 
                 Request.Builder requestBuilder = new Request.Builder()
-                        .url("https://shikimori.me" + apiUrl)
+                        .url("https://shikimori.one" + apiUrl)
                         .header("Authorization", "User-Agent ShikiOAuthTest");
                 Request request = requestBuilder.build();
 
@@ -172,7 +172,7 @@ public class RanobeViewModel extends ViewModel {
                             Gson gson = new Gson();
                             list = gson.fromJson(jsonArray.toString(), listType);
                             for (Manga ranobe : list) {
-                                ranobe.getImage().setOriginal("https://shikimori.me" + ranobe.getImage().getOriginal());
+                                ranobe.getImage().setOriginal("https://shikimori.one" + ranobe.getImage().getOriginal());
                             }
                             // Обновляем значение LiveData с списком аниме
                             listLiveData.postValue(list);
